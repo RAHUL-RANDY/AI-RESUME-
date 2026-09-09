@@ -1,0 +1,39 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+.pytest_cache/
+
+# Environment variables & secrets
+.env
+.env.*
+*.env
+*.env.*
+*.env.local
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+
+# Node & Frontend
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+.next/
+*.tsbuildinfo
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# IDE & Editor
+.vscode/
+.idea/
+
+# Large Model weights (keep metadata in git)
+# models/*.pkl

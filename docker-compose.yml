@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: career_intel_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - career_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: career_intel_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - MONGO_DB_NAME=career_intelligence
+      - JWT_SECRET=production_secret_key_career_intelligence_2026
+      - JWT_ALGORITHM=HS256
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:80,http://127.0.0.1:5173
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - mongo
+    networks:
+      - career_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: career_intel_frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - career_network
+
+networks:
+  career_network:
+    driver: bridge
+
+volumes:
+  mongo_data:

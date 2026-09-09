@@ -1,0 +1,27 @@
+{
+  "employability_model": {
+    "accuracy": 0.8825,
+    "precision": 0.8497,
+    "recall": 0.9011,
+    "f1_score": 0.8747,
+    "roc_auc": 0.9628,
+    "confusion_matrix": [
+      [
+        189,
+        29
+      ],
+      [
+        18,
+        164
+      ]
+    ],
+    "test_samples": 400
+  },
+  "salary_model": {
+    "mae": 7127.24,
+    "mse": 84574381.17,
+    "rmse": 9196.43,
+    "r2_score": 0.9574,
+    "test_samples": 500
+  }
+}
