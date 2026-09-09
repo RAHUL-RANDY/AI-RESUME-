@@ -46,7 +46,7 @@ Capabilities & Scope:
 1. Answer ALL types of user questions:
    - Technical & Engineering: System design, ML/AI architectures, Python/TypeScript/Go code, cloud & DevOps, data engineering, APIs, algorithms.
    - Resume & Career Strategy: ATS score optimization, STAR bullet crafting with metrics, portfolio ideas, career pathing.
-   - Platform Features & Navigation: Guide users on uploading resumes (/upload), viewing match radar & salary predictions (/dashboard), browsing accredited free & paid courses (/courses), mock interview prep (/interview), candidate ranking (/recruiter), and pricing tiers (/pricing).
+   - Platform Features & Navigation: Guide users on uploading resumes (/upload), viewing match radar & salary predictions (/dashboard), browsing accredited free & paid courses (/courses), mock interviews (/interview).
    - Interview Mastery: Behavioral STAR coaching, technical deep-dive questions, and salary negotiation tactics.
 2. Formatting:
    - Use clean Markdown with bolding, concise bullet points, and code blocks where helpful.
@@ -127,7 +127,8 @@ Capabilities & Scope:
             f"Regarding compensation strategy for a **{cand_role}** with **{cand_exp} years of experience**:\n\n"
             "1. **Anchor on Market Value:** Based on our trained Random Forest salary regression model and real market data, top talent commands strong compensation bands.\n"
             "2. **Quantify Business Impact:** Never ask for more money based on personal needs. Anchor your request on measurable technical outcomes (throughput, latency reduction, cost optimization).\n"
-            "3. **Negotiate the Whole Package:** If base salary bands are rigid, negotiate sign-on bonuses, equity refreshers, annual bonus guarantees, remote flexibility, or accelerated 6-month performance reviews."
+            "3. **Negotiate the Whole Package:** If base salary bands are rigid, negotiate sign-on bonuses, equity refreshers, annual bonus guarantees, remote flexibility, or accelerated 6-month equity vesting.\n"
+            "4. **Walk Away Ready:** Research competitor offers beforehand. Be prepared to respectfully decline if the final offer undervalues your expertise."
         )
     elif any(k in query_lower for k in ["gap", "skill", "missing", "learn", "study", "course"]):
         gap_text = f"focusing on **{', '.join(missing[:4])}**" if missing else "refining distributed systems, MLOps, and cloud scalability"
@@ -256,7 +257,7 @@ def generate_interview_questions(
         InterviewQuestion(
             id="q5_proj",
             category="Project-based",
-            question="Walk me through the most technically complex software system or feature you have engineered. What was the toughest architectural decision, and what would you do differently today in hindsight?",
+            question="Walk me through the most technically complex software system or feature you have engineered. What was the toughest architectural decision, and what would you do differently in hindsight?",
             context="Tests ownership, technical depth, and capacity for objective critical reflection.",
             key_evaluation_points=[
                 "Clear explanation of problem constraints, scale, and chosen solution",
@@ -277,7 +278,7 @@ def generate_interview_questions(
                 "Willingness to listen actively to opposing perspectives",
                 "Ability to disagree and commit once a decision is made"
             ],
-            suggested_structure="Situation (the technical dispute) -> Task (your responsibility) -> Action (how you gathered benchmarks/data and engaged constructively) -> Result (the consensus reached and project impact)."
+            suggested_structure="Situation (the technical dispute) -> Task (your responsibility) -> Action (how you gathered benchmarks/data and engaged constructively) -> Result (the consensus reached and shared learning)."
         ),
         InterviewQuestion(
             id="q7_behav",
