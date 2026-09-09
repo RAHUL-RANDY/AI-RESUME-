@@ -21,7 +21,7 @@ export const LoginPage: React.FC = () => {
       await login(email, password);
       navigate('/dashboard');
     } catch (err: any) {
-      setErrorMsg(err?.response?.data?.detail || 'Invalid email or password.');
+      setErrorMsg(err?.response?.data?.detail || err?.message || 'Invalid email or password.');
     } finally {
       setIsSubmitting(false);
     }

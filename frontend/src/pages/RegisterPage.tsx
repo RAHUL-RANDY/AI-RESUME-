@@ -23,7 +23,7 @@ export const RegisterPage: React.FC = () => {
       await register(name, email, password, role);
       navigate('/dashboard');
     } catch (err: any) {
-      setErrorMsg(err?.response?.data?.detail || 'Registration failed. Please check details.');
+      setErrorMsg(err?.response?.data?.detail || err?.message || 'Registration failed. Please check details.');
     } finally {
       setIsSubmitting(false);
     }
