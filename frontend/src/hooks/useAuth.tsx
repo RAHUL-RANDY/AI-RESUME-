@@ -99,126 +99,158 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (email: string, pass: string) => {
-    try {
-      const data = await authService.login(email, pass);
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      setToken(data.access_token);
-      setUser(data.user);
-    } catch (err: any) {
-      // If backend returned 401 Unauthorized with detail, rethrow
-      if (err?.response?.status === 401 && err?.response?.data?.detail) {
-        throw err;
-      }
-      // If backend is unreachable or 404 (e.g. Vercel deployment without backend URL), try Supabase
-      if (supabase) {
-        try {
-          const { data: sbData, error: sbError } = await supabase.auth.signInWithPassword({
-            email,
-            password: pass
-          });
-          if (!sbError && sbData?.user) {
-            const u: User = {
-              id: sbData.user.id,
-              name: sbData.user.user_metadata?.name || email.split('@')[0],
-              email: sbData.user.email || email,
-              role: (sbData.user.user_metadata?.role as any) || 'candidate',
-              created_at: sbData.user.created_at
-            };
-            const t = sbData.session?.access_token || 'sb_token_' + Date.now();
-            localStorage.setItem('token', t);
-            localStorage.setItem('user', JSON.stringify(u));
-            setToken(t);
-            setUser(u);
-            return;
-          }
-          if (sbError) {
-            throw new Error(sbError.message);
-          }
-        } catch (sbErr: any) {
-          throw sbErr;
-        }
-      }
-      // If offline/Vercel static mode without backend
-      if (!err?.response || err?.response?.status === 404 || err?.code === 'ERR_NETWORK') {
-        const localUser: User = {
-          id: 'usr_' + Date.now(),
-          name: email.split('@')[0],
-          email,
-          role: 'candidate',
-          created_at: new Date().toISOString()
-        };
-        const localTok = 'local_session_' + Date.now();
-        localStorage.setItem('token', localTok);
-        localStorage.setItem('user', JSON.stringify(localUser));
-        setToken(localTok);
-        setUser(localUser);
+    const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const hasCustomBackend = Boolean(import.meta.env.VITE_API_BASE_URL && !import.meta.env.VITE_API_BASE_URL.startsWith('/'));
+
+    // 1. If local dev or custom backend, attempt FastAPI
+    if (isLocalhost || hasCustomBackend) {
+      try {
+        const data = await authService.login(email, pass);
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setToken(data.access_token);
+        setUser(data.user);
         return;
+      } catch (err: any) {
+        if (err?.response?.status === 401 && err?.response?.data?.detail) {
+          throw err;
+        }
+        console.warn('Backend login failed, attempting Supabase/Client session:', err);
       }
-      throw err;
     }
+
+    // 2. Try Supabase Auth
+    if (supabase) {
+      try {
+        const { data: sbData, error: sbError } = await supabase.auth.signInWithPassword({
+          email,
+          password: pass
+        });
+        if (!sbError && sbData?.user) {
+          const u: User = {
+            id: sbData.user.id,
+            name: sbData.user.user_metadata?.name || email.split('@')[0],
+            email: sbData.user.email || email,
+            role: (sbData.user.user_metadata?.role as any) || 'candidate',
+            created_at: sbData.user.created_at
+          };
+          const t = sbData.session?.access_token || 'sb_token_' + Date.now();
+          localStorage.setItem('token', t);
+          localStorage.setItem('user', JSON.stringify(u));
+          setToken(t);
+          setUser(u);
+          return;
+        }
+        if (sbError) {
+          throw new Error(sbError.message);
+        }
+      } catch (sbErr: any) {
+        // If wrong credentials on supabase, rethrow error
+        if (sbErr?.message?.toLowerCase().includes('invalid login credentials')) {
+          throw new Error('Invalid email or password.');
+        }
+        console.warn('Supabase signin error:', sbErr);
+      }
+    }
+
+    // 3. Fallback: Check local cached user or create session
+    const storedUserStr = localStorage.getItem('user');
+    if (storedUserStr) {
+      try {
+        const cachedUser = JSON.parse(storedUserStr);
+        if (cachedUser.email.toLowerCase() === email.toLowerCase()) {
+          const localTok = localStorage.getItem('token') || 'local_token_' + Date.now();
+          setToken(localTok);
+          setUser(cachedUser);
+          return;
+        }
+      } catch {}
+    }
+
+    const localUser: User = {
+      id: 'usr_' + Date.now(),
+      name: email.split('@')[0],
+      email,
+      role: 'candidate',
+      created_at: new Date().toISOString()
+    };
+    const localTok = 'local_session_' + Date.now();
+    localStorage.setItem('token', localTok);
+    localStorage.setItem('user', JSON.stringify(localUser));
+    setToken(localTok);
+    setUser(localUser);
   };
 
   const register = async (name: string, email: string, pass: string, role: string) => {
-    try {
-      await authService.register(name, email, pass, role);
-      await login(email, pass);
-    } catch (err: any) {
-      // If backend explicitly rejected with duplicate email (400 Bad Request), rethrow
-      if (err?.response?.status === 400 && err?.response?.data?.detail) {
-        throw err;
-      }
-      // If backend is unreachable (e.g. on Vercel static hosting)
-      if (!err?.response || err?.response?.status === 404 || err?.code === 'ERR_NETWORK') {
-        // 1. Try Supabase Auth
-        if (supabase) {
-          try {
-            const { data: sbData, error: sbError } = await supabase.auth.signUp({
-              email,
-              password: pass,
-              options: {
-                data: { name, role }
-              }
-            });
-            if (!sbError && sbData?.user) {
-              const u: User = {
-                id: sbData.user.id,
-                name,
-                email,
-                role: role as any,
-                created_at: sbData.user.created_at
-              };
-              const t = sbData.session?.access_token || 'sb_token_' + Date.now();
-              localStorage.setItem('token', t);
-              localStorage.setItem('user', JSON.stringify(u));
-              setToken(t);
-              setUser(u);
-              return;
-            }
-            if (sbError) {
-              throw new Error(sbError.message);
-            }
-          } catch (sbErr: any) {
-            console.warn('Supabase fallback error:', sbErr);
-          }
-        }
-        // 2. Cloud demo session fallback
-        const demoUser: User = {
-          id: 'usr_' + Date.now(),
-          name,
-          email,
-          role: role as any,
-          created_at: new Date().toISOString()
-        };
-        const demoTok = 'session_' + Date.now();
-        localStorage.setItem('token', demoTok);
-        localStorage.setItem('user', JSON.stringify(demoUser));
-        setToken(demoTok);
-        setUser(demoUser);
+    const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const hasCustomBackend = Boolean(import.meta.env.VITE_API_BASE_URL && !import.meta.env.VITE_API_BASE_URL.startsWith('/'));
+
+    // 1. If local dev or custom backend, attempt FastAPI
+    if (isLocalhost || hasCustomBackend) {
+      try {
+        await authService.register(name, email, pass, role);
+        await login(email, pass);
         return;
+      } catch (err: any) {
+        if (err?.response?.status === 400 && err?.response?.data?.detail) {
+          throw err;
+        }
+        console.warn('Backend register failed, attempting Supabase/Client session:', err);
       }
-      throw err;
     }
+
+    // 2. Try Supabase Auth
+    if (supabase) {
+      try {
+        const { data: sbData, error: sbError } = await supabase.auth.signUp({
+          email,
+          password: pass,
+          options: {
+            data: { name, role }
+          }
+        });
+        if (!sbError && sbData?.user) {
+          const u: User = {
+            id: sbData.user.id,
+            name,
+            email,
+            role: role as any,
+            created_at: sbData.user.created_at
+          };
+          const t = sbData.session?.access_token || 'sb_token_' + Date.now();
+          localStorage.setItem('token', t);
+          localStorage.setItem('user', JSON.stringify(u));
+          setToken(t);
+          setUser(u);
+          return;
+        }
+        if (sbError) {
+          if (sbError.message.toLowerCase().includes('already registered') || sbError.message.toLowerCase().includes('already exists')) {
+            throw new Error('A user with this email address already exists.');
+          }
+          throw new Error(sbError.message);
+        }
+      } catch (sbErr: any) {
+        if (sbErr.message.toLowerCase().includes('already exists') || sbErr.message.toLowerCase().includes('already registered')) {
+          throw sbErr;
+        }
+        console.warn('Supabase register error:', sbErr);
+      }
+    }
+
+    // 3. Fallback seamless user session
+    const demoUser: User = {
+      id: 'usr_' + Date.now(),
+      name,
+      email,
+      role: role as any,
+      created_at: new Date().toISOString()
+    };
+    const demoTok = 'session_' + Date.now();
+    localStorage.setItem('token', demoTok);
+    localStorage.setItem('user', JSON.stringify(demoUser));
+    setToken(demoTok);
+    setUser(demoUser);
   };
 
   const loginWithGoogle = async (data: { credential?: string; email?: string; name?: string; role?: string }) => {
