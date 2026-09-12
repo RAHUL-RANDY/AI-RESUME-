@@ -32,12 +32,13 @@ export const DashboardPage: React.FC = () => {
     salary,
     courses,
     roadmap,
-    targetRole
+    targetRole,
+    loadSampleProfile
   } = useResumeAnalysis();
 
   const [showAtsDetails, setShowAtsDetails] = useState<boolean>(false);
 
-  // If no analysis is loaded, prompt user to upload resume
+  // If no analysis is loaded, prompt user to upload resume or load sample profile
   if (!parsedResume && !atsResult) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
@@ -46,15 +47,22 @@ export const DashboardPage: React.FC = () => {
         </div>
         <h2 className="text-2xl font-bold text-white mb-2">No Active Resume Analysis</h2>
         <p className="text-sm text-slate-400 max-w-md mx-auto mb-6">
-          Upload your resume to calculate your dynamic ATS score, SBERT match, ML predictions, and personalized roadmap.
+          Upload your resume to calculate your dynamic ATS score, SBERT match, ML predictions, and personalized roadmap, or load a sample candidate profile.
         </p>
-        <div className="flex items-center justify-center">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             to="/upload"
-            className="px-6 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-sky-500 to-indigo-600 hover:opacity-95 text-white shadow-lg shadow-indigo-500/25 transition-all"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-sky-500 to-indigo-600 hover:opacity-95 text-white shadow-lg shadow-indigo-500/25 transition-all"
           >
             Upload Resume Now
           </Link>
+          <button
+            onClick={loadSampleProfile}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-sm bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            <Sparkles className="w-4 h-4 text-sky-400" />
+            Load Interactive Sample Profile
+          </button>
         </div>
       </div>
     );
