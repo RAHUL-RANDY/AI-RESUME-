@@ -12,7 +12,9 @@ from . import (
     voice_interview,
     outreach,
     job_tracker,
-    developer_profile
+    developer_profile,
+    jobs,
+    negotiation
 )
 
 __all__ = [
@@ -29,5 +31,7 @@ __all__ = [
     "voice_interview",
     "outreach",
     "job_tracker",
-    "developer_profile"
+    "developer_profile",
+    "jobs",
+    "negotiation"
 ]

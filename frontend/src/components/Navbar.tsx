@@ -21,7 +21,8 @@ import {
   ChevronDown,
   Menu,
   X,
-  User
+  User,
+  DollarSign
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { ThemeToggle } from './ThemeToggle';
@@ -79,6 +80,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const aiFeatures = [
+    { to: '/jobs', label: 'AI Job Search & Match', icon: Briefcase, badge: 'SBERT' },
+    { to: '/salary-negotiator', label: 'Offer & Salary Studio', icon: DollarSign, badge: 'High TC' },
     { to: '/voice-interview', label: 'Voice AI Interview', icon: Mic, badge: 'Live Audio' },
     { to: '/resume-builder', label: 'ATS Resume Builder', icon: FileText, badge: '1-Click PDF' },
     { to: '/cover-letter', label: 'AI Cover Letter & DMs', icon: Send, badge: 'High Yield' },
@@ -89,6 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { to: '/', label: 'Home', icon: Sparkles },
     { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/jobs', label: 'Find Jobs', icon: Briefcase },
     { to: '/upload', label: 'Analyze Resume', icon: UploadCloud },
     { to: '/courses', label: 'Courses', icon: BookOpen },
     { to: '/mentor', label: 'AI Mentor', icon: Bot },
@@ -372,7 +376,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="space-y-1 mb-5">
                 <div className="text-[10px] font-bold uppercase tracking-wider text-sky-400 px-2 py-1 flex items-center justify-between">
                   <span>AI Power Tools</span>
-                  <span className="text-[9px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded-full font-bold">5 Tools</span>
+                  <span className="text-[9px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded-full font-bold">{aiFeatures.length} Tools</span>
                 </div>
                 {aiFeatures.map((tool) => {
                   const ToolIcon = tool.icon;

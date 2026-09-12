@@ -147,6 +147,7 @@ export interface ParsedResume {
   languages: string[];
   total_experience_years: number;
   raw_text: string;
+  target_role?: string;
   created_at?: string;
 }
 
@@ -304,4 +305,79 @@ export interface AdminSystemStats {
   employability_model_status: string;
   salary_model_status: string;
   nlp_models_loaded: boolean;
+}
+
+export interface JobListing {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  work_mode: 'Remote' | 'Hybrid' | 'Onsite' | string;
+  role_category: string;
+  experience_level: string;
+  salary_min: number;
+  salary_max: number;
+  salary_display: string;
+  logo_color: string;
+  required_skills: string[];
+  skills?: string[];
+  description: string;
+  apply_url: string;
+  posted_days_ago: number;
+  is_featured?: boolean;
+  logo?: string;
+  match_score?: number;
+}
+
+export interface JobMatchResult {
+  job_id: string;
+  match_percentage: number;
+  matched_skills: string[];
+  missing_skills: string[];
+  fit_level: 'High Match' | 'Strong Match' | 'Moderate Fit' | string;
+  job?: JobListing;
+  match_score?: number;
+  matching_skills?: string[];
+}
+
+export interface OfferAnalysisResult {
+  total_annual_compensation: number;
+  market_median: number;
+  market_75th_percentile: number;
+  market_90th_percentile: number;
+  money_left_on_table: number;
+  percentile_rank: number;
+  leverage_score: number;
+  health_status: string;
+  breakdown_chart: Record<string, number>;
+  // UI aliases
+  total_comp?: number;
+  target_tc?: number;
+  offer_rating?: string;
+  potential_upside?: number;
+  recommendation?: string;
+  market_benchmarks?: {
+    p25: number;
+    p50: number;
+    p75: number;
+    p90: number;
+  };
+}
+
+export interface CounterOfferResponse {
+  email_subject: string;
+  email_body: string;
+  phone_call_talking_points: string[];
+  recruiter_pushback_rebuttals: {
+    recruiter_pushback: string;
+    recommended_strategy: string;
+    suggested_verbiage: string;
+  }[];
+  // UI aliases
+  subject_line?: string;
+  phone_talking_points?: string[];
+  objection_rebuttals?: {
+    objection: string;
+    response: string;
+  }[];
 }

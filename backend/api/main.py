@@ -22,6 +22,8 @@ from backend.routes import (
     outreach,
     job_tracker,
     developer_profile,
+    jobs,
+    negotiation
 )
 
 load_dotenv()
@@ -71,6 +73,8 @@ app.include_router(voice_interview.router)
 app.include_router(outreach.router)
 app.include_router(job_tracker.router)
 app.include_router(developer_profile.router)
+app.include_router(jobs.router)
+app.include_router(negotiation.router)
 
 @app.get("/", include_in_schema=False)
 async def root():

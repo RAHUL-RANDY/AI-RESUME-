@@ -23,6 +23,8 @@ import { VoiceInterviewPage } from './pages/VoiceInterviewPage';
 import { ResumeBuilderPage } from './pages/ResumeBuilderPage';
 import { CoverLetterPage } from './pages/CoverLetterPage';
 import { JobTrackerPage } from './pages/JobTrackerPage';
+import { JobSearchPage } from './pages/JobSearchPage';
+import { SalaryNegotiationPage } from './pages/SalaryNegotiationPage';
 import { DeveloperProfilePage } from './pages/DeveloperProfilePage';
 import { PerformanceMonitor } from './components/PerformanceMonitor';
 import { MobileBottomNav } from './components/MobileBottomNav';
@@ -66,6 +68,11 @@ export const App: React.FC = () => {
                   <Route path="/resume-builder" element={<ResumeBuilderPage />} />
                   <Route path="/cover-letter" element={<CoverLetterPage />} />
                   <Route path="/tracker" element={<JobTrackerPage />} />
+                  <Route path="/jobs" element={<JobSearchPage />} />
+                  <Route path="/job-search" element={<JobSearchPage />} />
+                  <Route path="/salary-negotiator" element={<SalaryNegotiationPage />} />
+                  <Route path="/negotiate" element={<SalaryNegotiationPage />} />
+                  <Route path="/salary" element={<SalaryNegotiationPage />} />
                   <Route path="/developer-profile" element={<DeveloperProfilePage />} />
                   <Route path="/recruiter" element={<RecruiterPage />} />
                   <Route path="/admin" element={<AdminPage />} />

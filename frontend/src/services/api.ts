@@ -22,7 +22,11 @@ import {
   RazorpayOrderResponse,
   LLMStatusResponse,
   BulletRewriteResponse,
-  TailorSummaryResponse
+  TailorSummaryResponse,
+  JobListing,
+  JobMatchResult,
+  OfferAnalysisResult,
+  CounterOfferResponse,
 } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -305,6 +309,113 @@ export const subscriptionService = {
   }): Promise<CheckoutResponse> => {
     const res = await api.post<CheckoutResponse>('/subscription/razorpay/verify-payment', data);
     return res.data;
+  },
+};
+
+export const jobService = {
+  getJobs: async (role?: string, remote?: boolean, minSalary?: number, search?: string): Promise<{ total: number; jobs: JobListing[] }> => {
+    const params = new URLSearchParams();
+    if (role && role !== 'All' && role !== 'all') params.append('role', role);
+    if (remote !== undefined) params.append('work_mode', remote ? 'Remote' : 'Onsite');
+    if (minSalary) params.append('min_salary', String(minSalary));
+    if (search) params.append('search', search);
+    const res = await api.get<JobListing[] | { total: number; jobs: JobListing[] }>(`/jobs?${params.toString()}`);
+    const rawList: JobListing[] = Array.isArray(res.data) ? res.data : (res.data?.jobs || []);
+    const jobs = rawList.map(j => ({
+      ...j,
+      skills: j.required_skills,
+      match_score: j.match_score ?? 78,
+    }));
+    return { total: jobs.length, jobs };
+  },
+  matchJobs: async (skills: string[], targetRole?: string, minSalary?: number): Promise<{ total: number; matches: JobMatchResult[] }> => {
+    const res = await api.post<JobMatchResult[] | { total: number; matches: JobMatchResult[] }>('/jobs/match', {
+      candidate_skills: skills,
+      target_role: targetRole,
+      min_salary: minSalary,
+    });
+    const rawMatches: JobMatchResult[] = Array.isArray(res.data) ? res.data : (res.data?.matches || []);
+    const matches = rawMatches.map(m => ({
+      ...m,
+      match_score: Math.round(m.match_percentage),
+      matching_skills: m.matched_skills,
+    }));
+    return { total: matches.length, matches };
+  },
+};
+
+export const negotiationService = {
+  analyzeOffer: async (data: {
+    company: string;
+    role: string;
+    level: string;
+    base_salary: number;
+    equity: number;
+    sign_on: number;
+    bonus: number;
+    competing_offers?: number;
+    years_experience?: number;
+  }): Promise<OfferAnalysisResult> => {
+    const res = await api.post<OfferAnalysisResult>('/negotiation/analyze', {
+      company_name: data.company,
+      job_role: data.role,
+      level: data.level,
+      base_salary: data.base_salary,
+      equity_per_year: data.equity,
+      sign_on_bonus: data.sign_on,
+      annual_bonus_pct: data.base_salary > 0 ? (data.bonus / data.base_salary) * 100 : 0,
+      has_competing_offer: (data.competing_offers || 0) > 0,
+    });
+    const raw = res.data;
+    return {
+      ...raw,
+      total_comp: raw.total_annual_compensation,
+      target_tc: Math.round(raw.total_annual_compensation + (raw.money_left_on_table || 15000)),
+      offer_rating: raw.health_status,
+      potential_upside: raw.money_left_on_table,
+      recommendation: `This offer is rated ${raw.health_status}. You have an estimated +$${(raw.money_left_on_table / 1000).toFixed(0)}k in negotiation upside based on median and 75th percentile market data.`,
+      market_benchmarks: {
+        p25: Math.round(raw.market_median * 0.85),
+        p50: raw.market_median,
+        p75: raw.market_75th_percentile,
+        p90: raw.market_90th_percentile,
+      }
+    };
+  },
+  generateCounter: async (data: {
+    candidate_name: string;
+    company: string;
+    role: string;
+    current_offer_tc: number;
+    target_tc: number;
+    strategy: 'competing_offer' | 'market_value' | 'equity_pivot' | 'remote_benefits';
+    competing_details?: string;
+    key_strengths?: string[];
+  }): Promise<CounterOfferResponse> => {
+    const offeredBase = Math.round(data.current_offer_tc * 0.7);
+    const targetBase = Math.round(data.target_tc * 0.7);
+    const res = await api.post<CounterOfferResponse>('/negotiation/generate-counter', {
+      company_name: data.company,
+      job_role: data.role,
+      offered_base: offeredBase,
+      target_base: targetBase,
+      offered_equity: Math.round(data.current_offer_tc * 0.2),
+      target_equity: Math.round(data.target_tc * 0.2),
+      sign_on_bonus: 20000,
+      strategy: data.strategy,
+      candidate_name: data.candidate_name,
+      key_achievements: data.key_strengths,
+    });
+    const raw = res.data;
+    return {
+      ...raw,
+      subject_line: raw.email_subject,
+      phone_talking_points: raw.phone_call_talking_points,
+      objection_rebuttals: (raw.recruiter_pushback_rebuttals || []).map((r: any) => ({
+        objection: r.recruiter_pushback || r.objection,
+        response: r.suggested_verbiage || r.response,
+      })),
+    };
   },
 };
 
