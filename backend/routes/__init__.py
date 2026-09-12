@@ -18,7 +18,8 @@ from . import (
     coding,
     portfolio,
     smart_answers,
-    assessment
+    assessment,
+    ats_optimizer
 )
 
 __all__ = [
@@ -41,5 +42,6 @@ __all__ = [
     "coding",
     "portfolio",
     "smart_answers",
-    "assessment"
+    "assessment",
+    "ats_optimizer"
 ]

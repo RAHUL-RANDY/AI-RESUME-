@@ -70,6 +70,8 @@ export const App: React.FC = () => {
                   <Route path="/interview" element={<InterviewPrepPage />} />
                   <Route path="/voice-interview" element={<VoiceInterviewPage />} />
                   <Route path="/resume-builder" element={<ResumeBuilderPage />} />
+                  <Route path="/resume-creator" element={<ResumeBuilderPage />} />
+                  <Route path="/ats-booster" element={<ResumeBuilderPage />} />
                   <Route path="/cover-letter" element={<CoverLetterPage />} />
                   <Route path="/tracker" element={<JobTrackerPage />} />
                   <Route path="/jobs" element={<JobSearchPage />} />

@@ -509,3 +509,41 @@ export interface AssessmentResultResponse {
     explanation: string;
   }[];
 }
+
+// 5. ATS Score Optimizer & Resume Creator Types
+export interface BoostBulletVariations {
+  metrics_driven: string;
+  leadership_driven: string;
+  tech_systems_driven: string;
+}
+
+export interface BoostBulletResponse {
+  original_bullet: string;
+  variations: BoostBulletVariations;
+  action_verbs_used: string[];
+  predicted_ats_boost: number;
+}
+
+export interface AnalyzeATSResponse {
+  ats_score: number;
+  grade: string;
+  metrics_count: number;
+  action_verb_count: number;
+  found_keywords: string[];
+  missing_critical_keywords: string[];
+  weak_phrases_detected: string[];
+  improvements: string[];
+}
+
+export interface AutoBoostResponse {
+  old_score: number;
+  new_score: number;
+  boost_delta: number;
+  boosted_summary: string;
+  boosted_skills: string;
+  boosted_experiences: any[];
+  boosted_projects: any[];
+  keywords_injected: string[];
+  improvements_applied: string[];
+}
+

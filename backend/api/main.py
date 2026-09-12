@@ -27,7 +27,8 @@ from backend.routes import (
     coding,
     portfolio,
     smart_answers,
-    assessment
+    assessment,
+    ats_optimizer
 )
 
 load_dotenv()
@@ -83,6 +84,7 @@ app.include_router(coding.router)
 app.include_router(portfolio.router)
 app.include_router(smart_answers.router)
 app.include_router(assessment.router)
+app.include_router(ats_optimizer.router)
 
 @app.get("/", include_in_schema=False)
 async def root():

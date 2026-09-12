@@ -36,6 +36,9 @@ import {
   AnswerGenerateResponse,
   TopicAssessment,
   AssessmentResultResponse,
+  BoostBulletResponse,
+  AnalyzeATSResponse,
+  AutoBoostResponse,
 } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -500,6 +503,39 @@ export const assessmentService = {
       candidate_name: candidateName,
       selected_answers: selectedAnswers,
     });
+    return res.data;
+  },
+};
+
+export const atsOptimizerService = {
+  boostBullet: async (bullet: string, role?: string): Promise<BoostBulletResponse> => {
+    const res = await api.post<BoostBulletResponse>('/ats-optimizer/boost-bullet', {
+      bullet,
+      role: role || 'Full Stack Engineer',
+    });
+    return res.data;
+  },
+  analyzeATS: async (data: {
+    resume_summary: string;
+    resume_skills: string;
+    resume_bullets: string[];
+    job_description?: string;
+    target_role?: string;
+  }): Promise<AnalyzeATSResponse> => {
+    const res = await api.post<AnalyzeATSResponse>('/ats-optimizer/analyze', data);
+    return res.data;
+  },
+  autoBoost: async (data: {
+    name: string;
+    title: string;
+    summary: string;
+    skills: string;
+    experiences: any[];
+    projects: any[];
+    job_description?: string;
+    target_role?: string;
+  }): Promise<AutoBoostResponse> => {
+    const res = await api.post<AutoBoostResponse>('/ats-optimizer/auto-boost', data);
     return res.data;
   },
 };
