@@ -14,7 +14,11 @@ from . import (
     job_tracker,
     developer_profile,
     jobs,
-    negotiation
+    negotiation,
+    coding,
+    portfolio,
+    smart_answers,
+    assessment
 )
 
 __all__ = [
@@ -33,5 +37,9 @@ __all__ = [
     "job_tracker",
     "developer_profile",
     "jobs",
-    "negotiation"
+    "negotiation",
+    "coding",
+    "portfolio",
+    "smart_answers",
+    "assessment"
 ]

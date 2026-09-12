@@ -22,7 +22,11 @@ import {
   Menu,
   X,
   User,
-  DollarSign
+  DollarSign,
+  Terminal,
+  Globe,
+  FileQuestion,
+  Award
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { ThemeToggle } from './ThemeToggle';
@@ -82,6 +86,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   const aiFeatures = [
     { to: '/jobs', label: 'AI Job Search & Match', icon: Briefcase, badge: 'SBERT' },
     { to: '/salary-negotiator', label: 'Offer & Salary Studio', icon: DollarSign, badge: 'High TC' },
+    { to: '/coding-arena', label: 'AI Coding & DSA Arena', icon: Terminal, badge: 'Live DSA' },
+    { to: '/portfolio-builder', label: 'AI Portfolio Builder', icon: Globe, badge: '1-Click Site' },
+    { to: '/smart-answers', label: 'Smart Job Answers', icon: FileQuestion, badge: 'Greenhouse' },
+    { to: '/assessments', label: 'Skill Badges & Certs', icon: Award, badge: 'Verified' },
     { to: '/voice-interview', label: 'Voice AI Interview', icon: Mic, badge: 'Live Audio' },
     { to: '/resume-builder', label: 'ATS Resume Builder', icon: FileText, badge: '1-Click PDF' },
     { to: '/cover-letter', label: 'AI Cover Letter & DMs', icon: Send, badge: 'High Yield' },

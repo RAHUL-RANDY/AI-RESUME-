@@ -381,3 +381,131 @@ export interface CounterOfferResponse {
     response: string;
   }[];
 }
+
+// 1. Coding & DSA Arena Types
+export interface TestCase {
+  input_str: string;
+  expected_output: string;
+  is_hidden?: boolean;
+}
+
+export interface CodingChallenge {
+  id: string;
+  title: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard' | string;
+  category: string;
+  acceptance_rate: string;
+  description: string;
+  examples: { input: string; output: string; explanation?: string }[];
+  constraints: string[];
+  starter_code_python: string;
+  starter_code_javascript: string;
+  test_cases: TestCase[];
+}
+
+export interface TestResult {
+  test_case_index: number;
+  input_str: string;
+  expected: string;
+  actual: string;
+  passed: boolean;
+}
+
+export interface CodeEvaluationResponse {
+  all_passed: boolean;
+  passed_count: number;
+  total_count: number;
+  test_results: TestResult[];
+  time_complexity: string;
+  space_complexity: string;
+  code_quality_score: number;
+  ai_feedback: string;
+  optimization_tips: string[];
+  optimal_reference_code: string;
+}
+
+// 2. Portfolio Generator Types
+export interface PortfolioProject {
+  name: string;
+  description: string;
+  tech_stack: string[];
+  live_url?: string;
+  github_url?: string;
+}
+
+export interface PortfolioExperience {
+  company: string;
+  role: string;
+  duration: string;
+  highlights: string[];
+}
+
+export interface PortfolioGenerateResponse {
+  portfolio_slug: string;
+  theme: string;
+  html_bundle: string;
+  stats: {
+    skills_count: number;
+    projects_count: number;
+    theme: string;
+    ready_for_download: boolean;
+  };
+}
+
+// 3. Smart Application Answers Types
+export interface ApplicationQuestion {
+  id: string;
+  category: string;
+  question_text: string;
+  intent: string;
+  key_evaluation_factors: string[];
+}
+
+export interface AnswerGenerateResponse {
+  question_id: string;
+  company_name: string;
+  tailored_answer: string;
+  bullet_talking_points: string[];
+  recruiter_green_flags: string[];
+  red_flags_to_avoid: string[];
+}
+
+// 4. Timed Skill Assessment Types
+export interface QuizQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correct_option_index?: number;
+  explanation?: string;
+}
+
+export interface TopicAssessment {
+  id: string;
+  title: string;
+  description: string;
+  badge_icon: string;
+  difficulty: string;
+  duration_minutes: number;
+  questions_count: number;
+}
+
+export interface AssessmentResultResponse {
+  topic_id: string;
+  topic_title: string;
+  candidate_name: string;
+  score_percentage: number;
+  passed: boolean;
+  correct_count: number;
+  total_questions: number;
+  percentile_rank: number;
+  verification_badge_id: string;
+  badge_title: string;
+  detailed_feedback: {
+    question_id: number;
+    question: string;
+    user_choice: number;
+    correct_option_index: number;
+    is_correct: boolean;
+    explanation: string;
+  }[];
+}

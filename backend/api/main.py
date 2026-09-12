@@ -23,7 +23,11 @@ from backend.routes import (
     job_tracker,
     developer_profile,
     jobs,
-    negotiation
+    negotiation,
+    coding,
+    portfolio,
+    smart_answers,
+    assessment
 )
 
 load_dotenv()
@@ -75,6 +79,10 @@ app.include_router(job_tracker.router)
 app.include_router(developer_profile.router)
 app.include_router(jobs.router)
 app.include_router(negotiation.router)
+app.include_router(coding.router)
+app.include_router(portfolio.router)
+app.include_router(smart_answers.router)
+app.include_router(assessment.router)
 
 @app.get("/", include_in_schema=False)
 async def root():

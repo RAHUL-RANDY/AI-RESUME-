@@ -27,6 +27,15 @@ import {
   JobMatchResult,
   OfferAnalysisResult,
   CounterOfferResponse,
+  CodingChallenge,
+  CodeEvaluationResponse,
+  PortfolioGenerateResponse,
+  PortfolioProject,
+  PortfolioExperience,
+  ApplicationQuestion,
+  AnswerGenerateResponse,
+  TopicAssessment,
+  AssessmentResultResponse,
 } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -416,6 +425,82 @@ export const negotiationService = {
         response: r.suggested_verbiage || r.response,
       })),
     };
+  },
+};
+
+export const codingService = {
+  getChallenges: async (): Promise<CodingChallenge[]> => {
+    const res = await api.get<CodingChallenge[]>('/coding/challenges');
+    return res.data;
+  },
+  getChallenge: async (id: string): Promise<CodingChallenge> => {
+    const res = await api.get<CodingChallenge>(`/coding/challenges/${id}`);
+    return res.data;
+  },
+  evaluateCode: async (challengeId: string, language: string, code: string): Promise<CodeEvaluationResponse> => {
+    const res = await api.post<CodeEvaluationResponse>('/coding/evaluate', {
+      challenge_id: challengeId,
+      language,
+      code,
+    });
+    return res.data;
+  },
+};
+
+export const portfolioService = {
+  generatePortfolio: async (data: {
+    name: string;
+    title: string;
+    summary: string;
+    email?: string;
+    location?: string;
+    github_url?: string;
+    linkedin_url?: string;
+    skills: string[];
+    projects?: PortfolioProject[];
+    experience?: PortfolioExperience[];
+    theme?: string;
+  }): Promise<PortfolioGenerateResponse> => {
+    const res = await api.post<PortfolioGenerateResponse>('/portfolio/generate', data);
+    return res.data;
+  },
+};
+
+export const smartAnswersService = {
+  getQuestions: async (): Promise<ApplicationQuestion[]> => {
+    const res = await api.get<ApplicationQuestion[]>('/smart-answers/questions');
+    return res.data;
+  },
+  generateAnswer: async (data: {
+    question_id: string;
+    company_name: string;
+    target_role: string;
+    skills: string[];
+    years_experience?: number;
+    candidate_name?: string;
+    tone?: string;
+  }): Promise<AnswerGenerateResponse> => {
+    const res = await api.post<AnswerGenerateResponse>('/smart-answers/generate', data);
+    return res.data;
+  },
+};
+
+export const assessmentService = {
+  getTopics: async (): Promise<TopicAssessment[]> => {
+    const res = await api.get<TopicAssessment[]>('/assessments/topics');
+    return res.data;
+  },
+  getQuiz: async (topicId: string): Promise<{ topic_id: string; title: string; duration_minutes: number; questions: any[] }> => {
+    const res = await api.get(`/assessments/quiz/${topicId}`);
+    return res.data;
+  },
+  submitAssessment: async (topicId: string, candidateName: string, selectedAnswers: Record<number, number>): Promise<AssessmentResultResponse> => {
+    const res = await api.post<AssessmentResultResponse>('/assessments/submit', {
+      topic_id: topicId,
+      candidate_name: candidateName,
+      selected_answers: selectedAnswers,
+    });
+    return res.data;
   },
 };
 

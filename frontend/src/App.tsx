@@ -26,6 +26,10 @@ import { JobTrackerPage } from './pages/JobTrackerPage';
 import { JobSearchPage } from './pages/JobSearchPage';
 import { SalaryNegotiationPage } from './pages/SalaryNegotiationPage';
 import { DeveloperProfilePage } from './pages/DeveloperProfilePage';
+import { CodingArenaPage } from './pages/CodingArenaPage';
+import { PortfolioBuilderPage } from './pages/PortfolioBuilderPage';
+import { SmartAnswersPage } from './pages/SmartAnswersPage';
+import { SkillAssessmentsPage } from './pages/SkillAssessmentsPage';
 import { PerformanceMonitor } from './components/PerformanceMonitor';
 import { MobileBottomNav } from './components/MobileBottomNav';
 
@@ -74,6 +78,14 @@ export const App: React.FC = () => {
                   <Route path="/negotiate" element={<SalaryNegotiationPage />} />
                   <Route path="/salary" element={<SalaryNegotiationPage />} />
                   <Route path="/developer-profile" element={<DeveloperProfilePage />} />
+                  <Route path="/coding-arena" element={<CodingArenaPage />} />
+                  <Route path="/coding" element={<CodingArenaPage />} />
+                  <Route path="/dsa" element={<CodingArenaPage />} />
+                  <Route path="/portfolio-builder" element={<PortfolioBuilderPage />} />
+                  <Route path="/portfolio" element={<PortfolioBuilderPage />} />
+                  <Route path="/smart-answers" element={<SmartAnswersPage />} />
+                  <Route path="/assessments" element={<SkillAssessmentsPage />} />
+                  <Route path="/certifications" element={<SkillAssessmentsPage />} />
                   <Route path="/recruiter" element={<RecruiterPage />} />
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/pricing" element={<PricingPage />} />
