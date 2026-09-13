@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
-  FileText,
-  Download,
   Printer,
-  Sparkles,
   Plus,
   Trash2,
-  CheckCircle,
   Eye,
   RefreshCw,
   Award,
@@ -21,9 +17,6 @@ import {
   ChevronUp,
   Briefcase,
   Target,
-  Wand2,
-  Sliders,
-  ExternalLink,
   ShieldCheck
 } from 'lucide-react';
 import { atsOptimizerService } from '../services/api';
@@ -277,7 +270,7 @@ export const ResumeBuilderPage: React.FC = () => {
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
 
   // Run ATS analysis whenever core text changes
-  const runAtsAnalysis = async () => {
+  const runAtsAnalysis = useCallback(async () => {
     setIsAnalyzingAts(true);
     try {
       const allBullets = [
@@ -313,14 +306,14 @@ export const ResumeBuilderPage: React.FC = () => {
     } finally {
       setIsAnalyzingAts(false);
     }
-  };
+  }, [summary, skills, experiences, projects, title, jobDescription]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       runAtsAnalysis();
     }, 600);
     return () => clearTimeout(timer);
-  }, [summary, skills, experiences, projects, title, jobDescription]);
+  }, [runAtsAnalysis]);
 
   // Handle Preset Switching
   const handleLoadPreset = (presetId: string) => {
@@ -869,6 +862,15 @@ ${education.map(e => `${e.institution} — ${e.degree} (${e.duration})`).join('\
                   className="w-full bg-slate-950/70 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500 mt-1"
                 />
               </div>
+              <div>
+                <label className="text-[11px] text-slate-400 font-medium">GitHub / Website</label>
+                <input
+                  type="text"
+                  value={github}
+                  onChange={(e) => setGithub(e.target.value)}
+                  className="w-full bg-slate-950/70 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500 mt-1"
+                />
+              </div>
             </div>
           </div>
 
@@ -1002,6 +1004,71 @@ ${education.map(e => `${e.institution} — ${e.degree} (${e.duration})`).join('\
                   >
                     + Add bullet point
                   </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Education Section */}
+          <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-sky-400">5. Education & Credentials</h3>
+              <button
+                onClick={() => setEducation([...education, {
+                  id: String(Date.now()),
+                  institution: 'Institution / University',
+                  degree: 'B.S. in Computer Science',
+                  duration: '2018 — 2022'
+                }])}
+                className="text-xs text-sky-400 hover:text-sky-300 flex items-center gap-1 font-semibold cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" /> Add Degree
+              </button>
+            </div>
+
+            {education.map((edu) => (
+              <div key={edu.id} className="p-3 bg-slate-900/80 rounded-xl border border-slate-800 space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    value={edu.institution}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setEducation(education.map(item => item.id === edu.id ? { ...item, institution: v } : item));
+                    }}
+                    placeholder="Institution"
+                    className="bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white"
+                  />
+                  <input
+                    type="text"
+                    value={edu.degree}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setEducation(education.map(item => item.id === edu.id ? { ...item, degree: v } : item));
+                    }}
+                    placeholder="Degree / Major"
+                    className="bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <input
+                    type="text"
+                    value={edu.duration}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setEducation(education.map(item => item.id === edu.id ? { ...item, duration: v } : item));
+                    }}
+                    placeholder="Duration (e.g. 2018 — 2022)"
+                    className="bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white flex-1"
+                  />
+                  {education.length > 1 && (
+                    <button
+                      onClick={() => setEducation(education.filter(item => item.id !== edu.id))}
+                      className="text-slate-500 hover:text-rose-400 transition p-1 cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

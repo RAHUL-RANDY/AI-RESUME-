@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Sparkles,
@@ -21,7 +21,6 @@ import {
   ChevronDown,
   Menu,
   X,
-  User,
   DollarSign,
   Terminal,
   Globe,
@@ -47,19 +46,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isDrawerOpen = controlledOpen !== undefined ? controlledOpen : internalMobileOpen;
-  const setDrawerOpen = (open: boolean) => {
+  const setDrawerOpen = useCallback((open: boolean) => {
     if (controlledSetOpen) {
       controlledSetOpen(open);
     } else {
       setInternalMobileOpen(open);
     }
-  };
+  }, [controlledSetOpen]);
 
   // Close drawer on route navigation
   useEffect(() => {
     setDrawerOpen(false);
     setToolsOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, setDrawerOpen]);
 
   // Lock body scroll when drawer is open
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Mail, CheckCircle2, X, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Loader2, Mail, X, AlertTriangle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 interface GoogleSignInButtonProps {

@@ -11,10 +11,7 @@ import {
   RotateCcw,
   Copy,
   Check,
-  Loader2,
-  ChevronRight,
-  ExternalLink,
-  MessageSquare,
+  Loader2
 } from 'lucide-react';
 import { useResumeAnalysis } from '../hooks/useResumeAnalysis';
 import { mentorService } from '../services/api';

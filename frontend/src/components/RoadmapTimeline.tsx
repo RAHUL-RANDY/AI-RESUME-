@@ -21,7 +21,14 @@ export const RoadmapTimeline: React.FC<RoadmapTimelineProps> = ({
   }
 
   return (
-    <div className="relative border-l border-slate-800 ml-4 md:ml-6 space-y-8 py-4">
+    <div className="space-y-4">
+      {targetRole && (
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-400">
+          <Compass className="w-3.5 h-3.5" />
+          <span>Strategic Path: {targetRole}</span>
+        </div>
+      )}
+      <div className="relative border-l border-slate-800 ml-4 md:ml-6 space-y-8 py-4">
       {milestones.map((milestone, idx) => (
         <motion.div
           key={milestone.month}
@@ -102,6 +109,7 @@ export const RoadmapTimeline: React.FC<RoadmapTimelineProps> = ({
           </div>
         </motion.div>
       ))}
+      </div>
     </div>
   );
 };

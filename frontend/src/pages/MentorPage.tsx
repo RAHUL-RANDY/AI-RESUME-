@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Send, User, Sparkles, Loader2, ArrowRight, Wand2, Copy, Check, Cpu, X } from 'lucide-react';
+import { Bot, Send, User, Sparkles, Loader2, Wand2, Copy, Check, Cpu, X } from 'lucide-react';
 import { mentorService } from '../services/api';
 import { useResumeAnalysis } from '../hooks/useResumeAnalysis';
 import { ChatMessage, LLMStatusResponse, BulletRewriteResponse } from '../types';

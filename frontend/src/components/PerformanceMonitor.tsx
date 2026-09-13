@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Activity,
   Zap,
   Cpu,
-  Wifi,
   ChevronUp,
   ChevronDown,
-  Sparkles,
   Server,
   Layers,
   Gauge
@@ -20,11 +17,12 @@ export const PerformanceMonitor: React.FC = () => {
   const [pingHistory, setPingHistory] = useState<number[]>([12, 16, 14, 11, 15, 13, 14]);
 
   const frameCountRef = useRef(0);
-  const lastTimeRef = useRef(performance.now());
+  const lastTimeRef = useRef(0);
 
   // FPS measurement loop
   useEffect(() => {
     let animId: number;
+    lastTimeRef.current = performance.now();
     const calculateFps = (now: number) => {
       frameCountRef.current++;
       if (now - lastTimeRef.current >= 1000) {

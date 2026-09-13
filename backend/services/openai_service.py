@@ -3,7 +3,31 @@ import logging
 from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 
+import time
+
 logger = logging.getLogger("career_intelligence.openai_service")
+
+# Circuit breaker: if quota is exhausted or rate limit hit, back off gracefully
+_quota_exhausted_until: float = 0.0
+
+def mark_quota_exhausted(duration_seconds: int = 600):
+    global _quota_exhausted_until
+    _quota_exhausted_until = time.time() + duration_seconds
+    logger.info("OpenAI quota limit reached. Gracefully switching to local high-precision NLP & SBERT engine.")
+
+def is_quota_exhausted() -> bool:
+    global _quota_exhausted_until
+    return time.time() < _quota_exhausted_until
+
+def is_quota_error(exc: Exception) -> bool:
+    err_str = str(exc).lower()
+    return (
+        "insufficient_quota" in err_str
+        or "credit_balance_exhausted" in err_str
+        or "rate_limit" in err_str
+        or "429" in err_str
+        or "quota" in err_str
+    )
 
 def get_openai_key() -> Optional[str]:
     """Dynamically resolves OPENAI_API_KEY from environment with hot reload."""
@@ -12,7 +36,9 @@ def get_openai_key() -> Optional[str]:
     return key if key and not key.startswith("your_") else None
 
 def get_openai_client():
-    """Returns an AsyncOpenAI client if API key is present, else None."""
+    """Returns an AsyncOpenAI client if API key is present and quota is not exhausted, else None."""
+    if is_quota_exhausted():
+        return None
     key = get_openai_key()
     if not key:
         return None
@@ -26,7 +52,7 @@ def get_openai_client():
 def get_llm_status() -> Dict[str, Any]:
     """Returns current active LLM status."""
     key = get_openai_key()
-    if key:
+    if key and not is_quota_exhausted():
         masked_key = f"{key[:7]}...{key[-4:]}" if len(key) > 12 else "***"
         return {
             "openai_configured": True,
@@ -37,7 +63,7 @@ def get_llm_status() -> Dict[str, Any]:
         }
     return {
         "openai_configured": False,
-        "provider": "Contextual Intelligence Engine (Built-in NLP)",
+        "provider": "Contextual Intelligence Engine (Built-in NLP & SBERT)",
         "model": "all-MiniLM-L6-v2 + SBERT",
         "key_preview": None,
         "status": "fallback_active"
@@ -69,7 +95,10 @@ async def generate_chat_response(
         if response.choices and response.choices[0].message.content:
             return response.choices[0].message.content.strip()
     except Exception as e:
-        logger.error(f"OpenAI chat completion error: {e}")
+        if is_quota_error(e):
+            mark_quota_exhausted()
+        else:
+            logger.warning(f"OpenAI chat completion unavailable: {e}")
     return None
 
 async def rewrite_bullet_point(
@@ -118,7 +147,10 @@ Format response as a JSON object with keys:
             raw = response.choices[0].message.content
             return json.loads(raw)
         except Exception as e:
-            logger.warning(f"OpenAI bullet rewrite failed: {e}. Falling back to rule-based enhancement.")
+            if is_quota_error(e):
+                mark_quota_exhausted()
+            else:
+                logger.warning(f"OpenAI bullet rewrite failed: {e}. Falling back to rule-based enhancement.")
 
     # Rule-based fallback if OpenAI key is not set
     clean = bullet_text.strip().rstrip(".")
@@ -165,7 +197,10 @@ async def generate_tailored_summary(
             summary = resp.choices[0].message.content.strip()
             return {"summary": summary, "provider": "OpenAI (gpt-4o-mini)"}
         except Exception as e:
-            logger.warning(f"OpenAI summary generation failed: {e}")
+            if is_quota_error(e):
+                mark_quota_exhausted()
+            else:
+                logger.warning(f"OpenAI summary generation failed: {e}")
 
     # Fallback summary
     fallback = (

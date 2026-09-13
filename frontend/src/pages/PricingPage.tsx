@@ -7,7 +7,6 @@ import {
   Shield,
   CreditCard,
   Building2,
-  HelpCircle,
   Loader2,
   CheckCircle2,
   X,
@@ -17,8 +16,7 @@ import {
   AlertTriangle,
   UserCheck,
   Mail,
-  User as UserIcon,
-  Globe
+  User as UserIcon
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { subscriptionService } from '../services/api';
@@ -191,7 +189,7 @@ export const PricingPage: React.FC = () => {
     fetchPlans();
     fetchStatus();
     fetchRzpConfig();
-  }, [user]);
+  }, [user, updateUser]);
 
   const handleSelectPlan = (plan: SubscriptionPlan) => {
     if (plan.id === activeTier) {
@@ -834,7 +832,7 @@ export const PricingPage: React.FC = () => {
                         </div>
                       </div>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        Live / Sandbox Ready
+                        {razorpayConfig?.key_id ? 'Gateway Active' : 'Sandbox Ready'}
                       </span>
                     </div>
                     <div className="pt-1 flex flex-wrap gap-2 text-[11px] text-slate-300">

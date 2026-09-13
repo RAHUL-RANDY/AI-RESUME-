@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Award,
@@ -36,18 +36,18 @@ export const SkillAssessmentsPage: React.FC = () => {
 
   const candidateName = parsedResume?.name || 'Alex Chen';
 
-  useEffect(() => {
-    loadTopics();
-  }, []);
-
-  const loadTopics = async () => {
+  const loadTopics = useCallback(async () => {
     try {
       const list = await assessmentService.getTopics();
       setTopics(list);
     } catch (e) {
       console.error('Failed to load assessment topics:', e);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadTopics();
+  }, [loadTopics]);
 
   const startQuiz = async (t: TopicAssessment) => {
     setActiveTopic(t);
@@ -61,6 +61,19 @@ export const SkillAssessmentsPage: React.FC = () => {
       console.error('Failed to load quiz:', e);
     }
   };
+
+  const handleSubmit = useCallback(async () => {
+    if (!activeTopic) return;
+    setIsSubmitting(true);
+    try {
+      const res = await assessmentService.submitAssessment(activeTopic.id, candidateName, selectedAnswers);
+      setResult(res);
+    } catch (err) {
+      console.error('Assessment submission error:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [activeTopic, candidateName, selectedAnswers]);
 
   // Timer countdown
   useEffect(() => {
@@ -76,24 +89,11 @@ export const SkillAssessmentsPage: React.FC = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [quizData, result, timeLeftSeconds]);
+  }, [handleSubmit, quizData, result, timeLeftSeconds]);
 
   const handleSelectOption = (questionId: number, optionIndex: number) => {
     if (result) return;
     setSelectedAnswers((prev) => ({ ...prev, [questionId]: optionIndex }));
-  };
-
-  const handleSubmit = async () => {
-    if (!activeTopic) return;
-    setIsSubmitting(true);
-    try {
-      const res = await assessmentService.submitAssessment(activeTopic.id, candidateName, selectedAnswers);
-      setResult(res);
-    } catch (err) {
-      console.error('Assessment submission error:', err);
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   const copyBadgeId = () => {

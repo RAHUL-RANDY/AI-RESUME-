@@ -1,20 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Briefcase,
   Plus,
   Trash2,
-  ExternalLink,
   DollarSign,
   MapPin,
   Calendar,
-  Sparkles,
-  CheckCircle2,
   TrendingUp,
-  Award,
-  ChevronRight,
-  Filter,
-  Layers,
-  ArrowRight,
+  Loader2,
   X
 } from 'lucide-react';
 
@@ -58,7 +51,7 @@ export const JobTrackerPage: React.FC = () => {
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
-  const fetchAppsAndStats = async () => {
+  const fetchAppsAndStats = useCallback(async () => {
     try {
       const [resApps, resStats] = await Promise.all([
         fetch(`${API_BASE}/tracker/applications`),
@@ -75,11 +68,11 @@ export const JobTrackerPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [API_BASE]);
 
   useEffect(() => {
     fetchAppsAndStats();
-  }, []);
+  }, [fetchAppsAndStats]);
 
   const handleAddApplication = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,7 +239,11 @@ export const JobTrackerPage: React.FC = () => {
 
               {/* Cards list */}
               <div className="space-y-3 flex-1 overflow-y-auto">
-                {columnApps.map((app) => (
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-12 text-slate-500">
+                    <Loader2 className="w-5 h-5 animate-spin text-sky-400" />
+                  </div>
+                ) : columnApps.map((app) => (
                   <div
                     key={app.id}
                     className="glass-card rounded-xl p-4 border border-slate-800 hover:border-slate-700 transition shadow-lg group relative space-y-2.5"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -12,13 +12,9 @@ import {
   BookmarkPlus,
   FileText,
   SlidersHorizontal,
-  Building2,
   TrendingUp,
   Zap,
-  Globe,
-  Tag,
   ArrowRight,
-  Filter,
   Check
 } from 'lucide-react';
 import { jobService } from '../services/api';
@@ -55,11 +51,7 @@ export const JobSearchPage: React.FC = () => {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  useEffect(() => {
-    loadJobsAndMatches();
-  }, [selectedRole, selectedWorkMode, minSalary]);
-
-  const loadJobsAndMatches = async () => {
+  const loadJobsAndMatches = useCallback(async () => {
     setIsLoading(true);
     try {
       const isRemoteParam = selectedWorkMode === 'Remote' ? true : selectedWorkMode === 'Onsite' ? false : undefined;
@@ -96,7 +88,11 @@ export const JobSearchPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [candidateSkills, effectiveRole, minSalary, searchQuery, selectedRole, selectedWorkMode]);
+
+  useEffect(() => {
+    loadJobsAndMatches();
+  }, [loadJobsAndMatches]);
 
   // Add to Job Tracker Kanban
   const handleTrackJob = async (job: JobListing) => {
@@ -126,7 +122,7 @@ export const JobSearchPage: React.FC = () => {
         setTrackedJobIds((prev) => ({ ...prev, [job.id]: true }));
         showToast(`Saved ${job.company} role to your target wishlist!`);
       }
-    } catch (e) {
+    } catch {
       setTrackedJobIds((prev) => ({ ...prev, [job.id]: true }));
       showToast(`Saved ${job.company} role to your target wishlist!`);
     } finally {

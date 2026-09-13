@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   BookOpen,
@@ -12,8 +12,6 @@ import {
   Gift,
   DollarSign,
   Briefcase,
-  Layers,
-  CheckCircle2,
   SlidersHorizontal
 } from 'lucide-react';
 import { recommendationService } from '../services/api';
@@ -36,11 +34,7 @@ export const CoursesPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeView, setActiveView] = useState<'all' | 'gaps'>('all');
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await recommendationService.getAllCourses();
@@ -53,12 +47,16 @@ export const CoursesPage: React.FC = () => {
       if (res.roles && res.roles.length > 0) {
         setRoles(['All Roles', ...res.roles]);
       }
-    } catch (e) {
-      console.error('Failed to load courses:', e);
+    } catch (err) {
+      console.error('Failed to fetch courses:', err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
   const missingSkillsLower = new Set(
     (skillGap?.missing_skills || []).map((s) => s.toLowerCase().trim())
@@ -222,7 +220,7 @@ export const CoursesPage: React.FC = () => {
                 }`}
               >
                 <Gift className="w-3.5 h-3.5 text-emerald-300" />
-                <span>100% Free ({freeCount})</span>
+                <span>100% Free ({currentFreeCount})</span>
               </button>
               <button
                 onClick={() => setPricingFilter('paid')}
@@ -233,7 +231,7 @@ export const CoursesPage: React.FC = () => {
                 }`}
               >
                 <DollarSign className="w-3.5 h-3.5 text-purple-300" />
-                <span>Paid ({paidCount})</span>
+                <span>Paid ({currentPaidCount})</span>
               </button>
             </div>
           </div>

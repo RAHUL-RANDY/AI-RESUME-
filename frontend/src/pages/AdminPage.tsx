@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck,
   Lock,
@@ -11,14 +10,9 @@ import {
   CheckCircle2,
   AlertCircle,
   Trash2,
-  UserCheck,
   Search,
   RefreshCw,
-  LogOut,
-  ArrowRight,
-  Sparkles,
   BarChart3,
-  Server,
   Zap
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
