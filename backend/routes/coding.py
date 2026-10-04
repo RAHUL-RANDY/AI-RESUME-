@@ -1,6 +1,8 @@
+import os
+import json
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter(prefix="/api/coding", tags=["Interactive Coding & DSA Arena"])
 
@@ -13,7 +15,7 @@ class CodingChallenge(BaseModel):
     id: str
     title: str
     difficulty: str  # Easy, Medium, Hard
-    category: str  # Arrays, Two Pointers, Trees, Dynamic Programming, Stack
+    category: str  # Arrays, Two Pointers, Trees, Dynamic Programming, Stack, etc.
     acceptance_rate: str
     description: str
     examples: List[Dict[str, str]]
@@ -46,135 +48,81 @@ class CodeEvaluationResponse(BaseModel):
     optimization_tips: List[str]
     optimal_reference_code: str
 
-CHALLENGES: List[CodingChallenge] = [
-    CodingChallenge(
-        id="two-sum",
-        title="1. Two Sum",
-        difficulty="Easy",
-        category="Arrays & Hash Maps",
-        acceptance_rate="51.2%",
-        description="Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.\n\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.\n\nYou can return the answer in any order.",
-        examples=[
-            {"input": "nums = [2,7,11,15], target = 9", "output": "[0,1]", "explanation": "Because nums[0] + nums[1] == 9, we return [0, 1]."},
-            {"input": "nums = [3,2,4], target = 6", "output": "[1,2]", "explanation": "nums[1] + nums[2] == 6."}
-        ],
-        constraints=[
-            "2 <= nums.length <= 10^4",
-            "-10^9 <= nums[i] <= 10^9",
-            "-10^9 <= target <= 10^9",
-            "Only one valid answer exists."
-        ],
-        starter_code_python="def two_sum(nums: list[int], target: int) -> list[int]:\n    # Write your solution here\n    pass\n",
-        starter_code_javascript="function twoSum(nums, target) {\n    // Write your solution here\n    return [];\n}\n",
-        test_cases=[
-            TestCase(input_str="nums=[2,7,11,15], target=9", expected_output="[0, 1]"),
-            TestCase(input_str="nums=[3,2,4], target=6", expected_output="[1, 2]"),
-            TestCase(input_str="nums=[3,3], target=6", expected_output="[0, 1]"),
-            TestCase(input_str="nums=[1,5,8,12,19], target=27", expected_output="[2, 4]", is_hidden=True),
-        ]
-    ),
-    CodingChallenge(
-        id="longest-substring",
-        title="3. Longest Substring Without Repeating Characters",
-        difficulty="Medium",
-        category="Sliding Window",
-        acceptance_rate="34.8%",
-        description="Given a string `s`, find the length of the longest substring without repeating characters.",
-        examples=[
-            {"input": "s = \"abcabcbb\"", "output": "3", "explanation": "The answer is \"abc\", with the length of 3."},
-            {"input": "s = \"bbbbb\"", "output": "1", "explanation": "The answer is \"b\", with the length of 1."},
-            {"input": "s = \"pwwkew\"", "output": "3", "explanation": "The answer is \"wke\", with the length of 3."}
-        ],
-        constraints=[
-            "0 <= s.length <= 5 * 10^4",
-            "s consists of English letters, digits, symbols and spaces."
-        ],
-        starter_code_python="def length_of_longest_substring(s: str) -> int:\n    # Implement sliding window algorithm\n    pass\n",
-        starter_code_javascript="function lengthOfLongestSubstring(s) {\n    // Implement sliding window algorithm\n    return 0;\n}\n",
-        test_cases=[
-            TestCase(input_str="s=\"abcabcbb\"", expected_output="3"),
-            TestCase(input_str="s=\"bbbbb\"", expected_output="1"),
-            TestCase(input_str="s=\"pwwkew\"", expected_output="3"),
-            TestCase(input_str="s=\"dvdf\"", expected_output="3", is_hidden=True),
-        ]
-    ),
-    CodingChallenge(
-        id="invert-binary-tree",
-        title="226. Invert Binary Tree",
-        difficulty="Easy",
-        category="Trees & Recursion",
-        acceptance_rate="76.1%",
-        description="Given the `root` of a binary tree, invert the tree, and return its root. Invert swapping the left and right children recursively.",
-        examples=[
-            {"input": "root = [4,2,7,1,3,6,9]", "output": "[4,7,2,9,6,3,1]", "explanation": "Left and right subtrees are mirrored at every node level."}
-        ],
-        constraints=[
-            "The number of nodes in the tree is in the range [0, 100].",
-            "-100 <= Node.val <= 100"
-        ],
-        starter_code_python="def invert_tree(root):\n    # Base case: if root is None, return None\n    if not root: return None\n    root.left, root.right = invert_tree(root.right), invert_tree(root.left)\n    return root\n",
-        starter_code_javascript="function invertTree(root) {\n    if (!root) return null;\n    const temp = root.left;\n    root.left = invertTree(root.right);\n    root.right = invertTree(temp);\n    return root;\n}\n",
-        test_cases=[
-            TestCase(input_str="root=[4,2,7,1,3,6,9]", expected_output="[4,7,2,9,6,3,1]"),
-            TestCase(input_str="root=[2,1,3]", expected_output="[2,3,1]"),
-            TestCase(input_str="root=[]", expected_output="[]")
-        ]
-    ),
-    CodingChallenge(
-        id="merge-intervals",
-        title="56. Merge Intervals",
-        difficulty="Medium",
-        category="Intervals & Sorting",
-        acceptance_rate="47.3%",
-        description="Given an array of `intervals` where `intervals[i] = [start_i, end_i]`, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.",
-        examples=[
-            {"input": "intervals = [[1,3],[2,6],[8,10],[15,18]]", "output": "[[1,6],[8,10],[15,18]]", "explanation": "Since intervals [1,3] and [2,6] overlap, merge them into [1,6]."},
-            {"input": "intervals = [[1,4],[4,5]]", "output": "[[1,5]]", "explanation": "Intervals [1,4] and [4,5] are considered overlapping."}
-        ],
-        constraints=[
-            "1 <= intervals.length <= 10^4",
-            "intervals[i].length == 2",
-            "0 <= start_i <= end_i <= 10^4"
-        ],
-        starter_code_python="def merge_intervals(intervals: list[list[int]]) -> list[list[int]]:\n    # Sort intervals by start time first\n    pass\n",
-        starter_code_javascript="function mergeIntervals(intervals) {\n    // Sort intervals by start time first\n    return [];\n}\n",
-        test_cases=[
-            TestCase(input_str="intervals=[[1,3],[2,6],[8,10],[15,18]]", expected_output="[[1, 6], [8, 10], [15, 18]]"),
-            TestCase(input_str="intervals=[[1,4],[4,5]]", expected_output="[[1, 5]]"),
-            TestCase(input_str="intervals=[[1,4],[0,4]]", expected_output="[[0, 4]]", is_hidden=True)
-        ]
-    ),
-    CodingChallenge(
-        id="lru-cache",
-        title="146. LRU Cache Implementation",
-        difficulty="Medium",
-        category="System Design & Data Structures",
-        acceptance_rate="42.1%",
-        description="Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.\n\nImplement the `LRUCache` class with `get(key)` and `put(key, value)` both operating in O(1) average time complexity.",
-        examples=[
-            {"input": "[\"LRUCache\",\"put\",\"put\",\"get\",\"put\",\"get\",\"put\",\"get\",\"get\",\"get\"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]", "output": "[null,null,null,1,null,-1,null,-1,3,4]", "explanation": "Evicts key 2 when capacity 2 is exceeded."}
-        ],
-        constraints=[
-            "1 <= capacity <= 3000",
-            "0 <= key <= 10^4",
-            "0 <= value <= 10^5",
-            "At most 2 * 10^5 calls will be made to get and put."
-        ],
-        starter_code_python="class LRUCache:\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = {}\n\n    def get(self, key: int) -> int:\n        pass\n\n    def put(self, key: int, value: int) -> None:\n        pass\n",
-        starter_code_javascript="class LRUCache {\n    constructor(capacity) {\n        this.capacity = capacity;\n        this.map = new Map();\n    }\n    get(key) {\n        return -1;\n    }\n    put(key, value) {\n    }\n}\n",
-        test_cases=[
-            TestCase(input_str="capacity=2, ops=[put(1,1), put(2,2), get(1)]", expected_output="1"),
-            TestCase(input_str="ops=[put(3,3), get(2)]", expected_output="-1 (evicted)"),
-        ]
-    )
-]
+# Load 465+ canonical DSA problems from datasets/dsa_problems.json
+def _load_challenges_dataset() -> List[CodingChallenge]:
+    dataset_path = os.path.join(os.path.dirname(__file__), "..", "..", "datasets", "dsa_problems.json")
+    if os.path.exists(dataset_path):
+        try:
+            with open(dataset_path, "r", encoding="utf-8") as f:
+                raw_data = json.load(f)
+                return [CodingChallenge(**item) for item in raw_data]
+        except Exception as e:
+            print("Warning: Failed to parse dsa_problems.json:", e)
+    
+    # Minimal fallback if file not yet loaded
+    return [
+        CodingChallenge(
+            id="p1-two-sum",
+            title="1. Two Sum",
+            difficulty="Easy",
+            category="Arrays & Hashing",
+            acceptance_rate="51.2%",
+            description="Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.",
+            examples=[{"input": "nums = [2,7,11,15], target = 9", "output": "[0, 1]"}],
+            constraints=["2 <= nums.length <= 10^4", "-10^9 <= nums[i] <= 10^9"],
+            starter_code_python="def two_sum(nums: list[int], target: int) -> list[int]:\n    # Write your solution here\n    pass\n",
+            starter_code_javascript="function twoSum(nums, target) {\n    return [];\n}\n",
+            test_cases=[TestCase(input_str="nums=[2,7,11,15], target=9", expected_output="[0, 1]")]
+        )
+    ]
+
+CHALLENGES: List[CodingChallenge] = _load_challenges_dataset()
 
 @router.get("/challenges", response_model=List[CodingChallenge])
-async def get_challenges():
+async def get_challenges(
+    category: Optional[str] = Query(None),
+    difficulty: Optional[str] = Query(None),
+    search: Optional[str] = Query(None),
+    limit: Optional[int] = Query(None),
+    offset: int = Query(0)
+):
     """
-    Returns the curated collection of FAANG & tier-1 engineering DSA challenges.
+    Returns curated catalog of 465+ FAANG & Top Tech DSA coding challenges
+    with category, difficulty, search, and pagination filters.
     """
-    return CHALLENGES
+    results = CHALLENGES
+    if category and category.lower() != "all":
+        results = [c for c in results if c.category.lower() == category.lower()]
+    if difficulty and difficulty.lower() != "all":
+        results = [c for c in results if c.difficulty.lower() == difficulty.lower()]
+    if search:
+        q = search.lower().strip()
+        results = [
+            c for c in results 
+            if q in c.title.lower() or q in c.category.lower() or q in c.id.lower() or q in c.description.lower()
+        ]
+    if limit is not None:
+        return results[offset:offset+limit]
+    return results[offset:]
+
+@router.get("/categories")
+async def get_categories():
+    """
+    Returns total problem counts and breakdown across categories and difficulties.
+    """
+    cat_counts: Dict[str, int] = {}
+    for c in CHALLENGES:
+        cat_counts[c.category] = cat_counts.get(c.category, 0) + 1
+    
+    return {
+        "total_problems": len(CHALLENGES),
+        "categories": [{"name": k, "count": v} for k, v in sorted(cat_counts.items(), key=lambda x: -x[1])],
+        "difficulties": {
+            "Easy": len([c for c in CHALLENGES if c.difficulty == "Easy"]),
+            "Medium": len([c for c in CHALLENGES if c.difficulty == "Medium"]),
+            "Hard": len([c for c in CHALLENGES if c.difficulty == "Hard"])
+        }
+    }
 
 @router.get("/challenges/{challenge_id}", response_model=CodingChallenge)
 async def get_challenge(challenge_id: str):

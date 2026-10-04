@@ -432,8 +432,12 @@ export const negotiationService = {
 };
 
 export const codingService = {
-  getChallenges: async (): Promise<CodingChallenge[]> => {
-    const res = await api.get<CodingChallenge[]>('/coding/challenges');
+  getChallenges: async (params?: { category?: string; difficulty?: string; search?: string; limit?: number; offset?: number }): Promise<CodingChallenge[]> => {
+    const res = await api.get<CodingChallenge[]>('/coding/challenges', { params });
+    return res.data;
+  },
+  getCategories: async (): Promise<{ total_problems: number; categories: { name: string; count: number }[]; difficulties: Record<string, number> }> => {
+    const res = await api.get('/coding/categories');
     return res.data;
   },
   getChallenge: async (id: string): Promise<CodingChallenge> => {
