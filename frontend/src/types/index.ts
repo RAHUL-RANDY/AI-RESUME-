@@ -307,6 +307,13 @@ export interface AdminSystemStats {
   nlp_models_loaded: boolean;
 }
 
+export interface ApplySource {
+  name: string;
+  url: string;
+  badge?: string;
+  icon?: string;
+}
+
 export interface JobListing {
   id: string;
   title: string;
@@ -323,6 +330,7 @@ export interface JobListing {
   skills?: string[];
   description: string;
   apply_url: string;
+  apply_sources?: ApplySource[];
   posted_days_ago: number;
   is_featured?: boolean;
   logo?: string;
