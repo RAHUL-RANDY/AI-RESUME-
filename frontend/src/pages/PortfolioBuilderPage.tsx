@@ -23,16 +23,16 @@ import { PortfolioGenerateResponse } from '../types';
 export const PortfolioBuilderPage: React.FC = () => {
   const { parsedResume, targetRole } = useResumeAnalysis();
 
-  const [name, setName] = useState(parsedResume?.name || 'Alex Chen');
+  const [name, setName] = useState(parsedResume?.name || 'Rahul R');
   const [title, setTitle] = useState(targetRole || parsedResume?.target_role || 'Senior Full Stack & Cloud Architect');
   const [summary, setSummary] = useState(
     parsedResume?.summary ||
     'Full-stack engineer specializing in scalable cloud architectures, high-performance distributed microservices, and modern web application suites.'
   );
-  const [location, setLocation] = useState('San Francisco, CA / Remote');
-  const [email, setEmail] = useState(parsedResume?.email || 'alex.chen.dev@example.com');
-  const [githubUrl, setGithubUrl] = useState(parsedResume?.github || 'https://github.com');
-  const [linkedinUrl, setLinkedinUrl] = useState(parsedResume?.linkedin || 'https://linkedin.com');
+  const [location, setLocation] = useState(parsedResume?.location || 'San Francisco, CA / Remote');
+  const [email, setEmail] = useState(parsedResume?.email || 'rahul.engineer@example.com');
+  const [githubUrl, setGithubUrl] = useState(parsedResume?.github || 'https://github.com/RAHUL-RANDY');
+  const [linkedinUrl, setLinkedinUrl] = useState(parsedResume?.linkedin || 'https://linkedin.com/in/rahul-engineer');
   const [skills, setSkills] = useState<string[]>(
     parsedResume?.skills || ['React', 'TypeScript', 'Node.js', 'Python', 'FastAPI', 'Docker', 'PostgreSQL', 'AWS']
   );
@@ -42,6 +42,19 @@ export const PortfolioBuilderPage: React.FC = () => {
   const [portfolioData, setPortfolioData] = useState<PortfolioGenerateResponse | null>(null);
   const [copied, setCopied] = useState(false);
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
+
+  // Sync state if parsedResume changes
+  useEffect(() => {
+    if (parsedResume) {
+      if (parsedResume.name) setName(parsedResume.name);
+      if (parsedResume.email) setEmail(parsedResume.email);
+      if (parsedResume.location) setLocation(parsedResume.location);
+      if (parsedResume.skills && parsedResume.skills.length > 0) setSkills(parsedResume.skills);
+      if (parsedResume.github) setGithubUrl(parsedResume.github);
+      if (parsedResume.linkedin) setLinkedinUrl(parsedResume.linkedin);
+      if (parsedResume.summary) setSummary(parsedResume.summary);
+    }
+  }, [parsedResume]);
 
   useEffect(() => {
     handleGenerate();

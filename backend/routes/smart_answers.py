@@ -120,6 +120,42 @@ async def generate_smart_answer(req: AnswerGenerateRequest):
         greens = ["Strong quantifiable metrics (% and ms)", "Addresses system stability and scalability"]
         reds = ["Never blame team members for bugs", "Avoid using vague statements like 'we fixed the issue' without technical specifics"]
 
+    elif req.question_id == "conflict-resolution":
+        tailored = (
+            f"In a previous sprint, our team had conflicting perspectives regarding the database schema design and caching "
+            f"strategy for a high-traffic service at scale. Rather than debating theoretical preferences, I proposed building "
+            f"a quick benchmarking harness to measure throughput under realistic production query workloads.\n\n"
+            f"We ran simulated load tests generating 10,000 concurrent writes across both approaches. The telemetry conclusively "
+            f"demonstrated that a normalized schema paired with Redis read-through caching eliminated write contention while keeping "
+            f"P99 latency sub-20ms. We aligned on this unified solution, delivered the sprint on schedule, and formalized the consensus "
+            f"in an Architecture Decision Record (ADR) for future engineering onboarding."
+        )
+        points = [
+            "Ground technical disagreements in telemetry and empirical benchmarks rather than subjective opinions.",
+            "Establish collaborative tone focused on customer experience and system uptime.",
+            "Formalize architectural rationale in an Architecture Decision Record (ADR)."
+        ]
+        greens = ["Data-driven decision making", "Empathetic collaboration and blameless documentation"]
+        reds = ["Never speak negatively about former colleagues or managers", "Avoid appearing rigid or dismissive"]
+
+    elif req.question_id == "failure-resilience":
+        tailored = (
+            f"Early in my engineering career, an unmonitored edge-case in an asynchronous background worker caused a queue backlog "
+            f"that delayed transactional confirmation emails during a marketing campaign. As soon as telemetry flagged the alert, "
+            f"I immediately owned the issue, coordinated with our customer support leads to send transparent communications, and deployed "
+            f"a hotfix to throttle message consumption and clear the dead-letter queue within 25 minutes.\n\n"
+            f"Following the incident, I organized a blameless post-mortem with the engineering team. We added automated end-to-end "
+            f"queue health checks, synthetic canary alerts, and circuit breakers into our CI/CD pipeline, completely preventing "
+            f"any recurrence of the bottleneck in subsequent high-volume launches."
+        )
+        points = [
+            "Take immediate, proactive ownership without making excuses.",
+            "Prioritize fast containment and transparent customer communications.",
+            "Run a blameless post-mortem and install lasting automated safeguards."
+        ]
+        greens = ["High psychological maturity and accountability", "Systems-level preventative engineering"]
+        reds = ["Never blame external services or teammates", "Avoid minimizing the impact of incidents"]
+
     elif req.question_id == "salary-notice":
         tailored = (
             f"Regarding compensation, my target for a {role} position is in the competitive market range of "
@@ -138,23 +174,22 @@ async def generate_smart_answer(req: AnswerGenerateRequest):
         reds = ["Don't state an excessively narrow fixed dollar amount early on", "Avoid appearing indecisive"]
 
     else:
-        # Conflict / Failure general response
+        # General Leadership & High Impact
         tailored = (
-            f"In a previous sprint, our team had conflicting perspectives regarding the database schema design for a high-traffic "
-            f"microservice. Rather than debating theoretical preferences, I proposed building a quick benchmarking harness "
-            f"using our actual query workloads.\n\n"
-            f"We ran realistic load tests simulating 10,000 concurrent writes across both approaches. The telemetry conclusively "
-            f"demonstrated that the normalized approach with denormalized read replicas eliminated write contention while keeping "
-            f"read latency minimal. We adopted this unified solution, delivered the sprint on schedule, and documented the decision "
-            f"in an Architecture Decision Record (ADR) for future engineers."
+            f"As an engineer who has spent {req.years_experience}+ years operating in fast-paced software environments, "
+            f"my greatest asset is the ability to bridge complex technical architecture with measurable business outcomes. "
+            f"Whether decomposing monolithic systems, mentoring junior developers through rigorous code reviews, or troubleshooting "
+            f"latency bottlenecks using {skills_preview}, I take end-to-end pride in system reliability.\n\n"
+            f"At {comp}, I am excited to apply this proactive mindset to help your engineering organization accelerate product delivery "
+            f"while maintaining uncompromising standards for code quality and uptime."
         )
         points = [
-            "Ground disagreements in telemetry and empirical benchmarks rather than subjective opinions.",
-            "Establish collaborative tone focused on customer and system uptime.",
-            "Record architectural lessons in an Architecture Decision Record (ADR)."
+            f"Demonstrate {req.years_experience}+ years of high-ownership engineering impact.",
+            f"Connect technical mastery in {skills_preview} directly to organizational velocity.",
+            "Highlight mentorship, blameless communication, and production rigor."
         ]
-        greens = ["Data-driven decision making", "Blameless collaboration and ADR documentation"]
-        reds = ["Never talk negatively about former colleagues or managers", "Avoid appearing stubborn"]
+        greens = ["Broad strategic vision paired with hands-on depth", "Team multiplier mentality"]
+        reds = ["Avoid sounding like an isolated individual contributor who avoids teamwork"]
 
     return AnswerGenerateResponse(
         question_id=req.question_id,

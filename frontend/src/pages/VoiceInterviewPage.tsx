@@ -16,6 +16,7 @@ import {
   HelpCircle,
   Activity
 } from 'lucide-react';
+import { useResumeAnalysis } from '../hooks/useResumeAnalysis';
 
 interface VoiceEvaluation {
   overall_score: number;
@@ -57,12 +58,38 @@ const QUESTION_BANK = [
     role: 'AI / Machine Learning',
     category: 'System Design',
     question: 'How would you build an end-to-end RAG (Retrieval-Augmented Generation) pipeline ensuring low latency and semantic accuracy?'
+  },
+  {
+    role: 'Cloud & DevOps Engineer',
+    category: 'Technical',
+    question: 'Walk me through how you orchestrate a zero-downtime database migration across a high-traffic Kubernetes cluster without locking active user tables.'
+  },
+  {
+    role: 'Staff Software Engineer',
+    category: 'System Design',
+    question: 'How do you architect a globally distributed API rate limiter using Redis and token bucket algorithms while tolerating inter-datacenter network partitions?'
+  },
+  {
+    role: 'Senior Developer',
+    category: 'Behavioral',
+    question: 'Describe a high-severity production outage you caused or triaged. How did you handle stakeholder communications and what systemic safeguards did you install?'
+  },
+  {
+    role: 'Data Engineer',
+    category: 'Technical',
+    question: 'How do you design a streaming data pipeline with Apache Kafka and Spark/Flink to handle out-of-order events with guaranteed exactly-once processing semantics?'
+  },
+  {
+    role: 'Security & Cloud Architect',
+    category: 'Technical',
+    question: 'What is your architectural approach to implementing Zero Trust service-to-service communication with mTLS and automated short-lived secret rotation?'
   }
 ];
 
 export const VoiceInterviewPage: React.FC = () => {
+  const { targetRole: profileTargetRole } = useResumeAnalysis();
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const [targetRole, setTargetRole] = useState('Full Stack Engineer');
+  const [targetRole, setTargetRole] = useState(profileTargetRole || 'Full Stack Engineer');
   const [isSpeakingQuestion, setIsSpeakingQuestion] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');

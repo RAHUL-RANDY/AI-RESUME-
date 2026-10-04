@@ -123,7 +123,7 @@ TOPICS: List[TopicAssessment] = [
         questions_count=5,
         questions=[
             QuizQuestion(
-                id=1,
+                id=6,
                 question="When using `useEffect`, what causes a 'stale closure' bug?",
                 options=[
                     "Rendering the component on an older version of Node.js.",
@@ -135,7 +135,7 @@ TOPICS: List[TopicAssessment] = [
                 explanation="Functions defined in component renders capture the scope of that specific render. If the dependency array is incomplete, the hook references stale state snapshots."
             ),
             QuizQuestion(
-                id=2,
+                id=7,
                 question="What is the benefit of `useCallback` when passed to an optimized child component wrapped in `React.memo`?",
                 options=[
                     "It computes the function output during compile time.",
@@ -147,7 +147,7 @@ TOPICS: List[TopicAssessment] = [
                 explanation="`useCallback` caches function references between renders so that `React.memo` prop equality checks (`===`) do not detect a reference change."
             ),
             QuizQuestion(
-                id=3,
+                id=8,
                 question="What is the main architectural improvement introduced by React's Fiber reconciler?",
                 options=[
                     "Direct compilation of JSX to WebAssembly.",
@@ -159,7 +159,7 @@ TOPICS: List[TopicAssessment] = [
                 explanation="React Fiber splits reconciliation into cooperative units of work, enabling time-slicing and prioritization of urgent user inputs over background updates."
             ),
             QuizQuestion(
-                id=4,
+                id=9,
                 question="Why is mutating state directly (e.g. `state.items.push(x)`) an anti-pattern in React?",
                 options=[
                     "React relies on reference equality (`Object.is`) to detect state changes and schedule UI re-renders.",
@@ -171,7 +171,7 @@ TOPICS: List[TopicAssessment] = [
                 explanation="React checks if the new state reference differs from the previous reference using `Object.is`. Mutating the same object reference prevents re-rendering."
             ),
             QuizQuestion(
-                id=5,
+                id=10,
                 question="What problem does React 18's `useTransition` hook solve?",
                 options=[
                     "It manages CSS grid layouts automatically.",
@@ -181,6 +181,148 @@ TOPICS: List[TopicAssessment] = [
                 ],
                 correct_option_index=1,
                 explanation="`useTransition` allows you to prioritize urgent inputs (like keystrokes or clicks) over background computational transitions (like filtering a 10,000 item list)."
+            )
+        ]
+    ),
+    TopicAssessment(
+        id="system-architecture",
+        title="System Architecture & Scalability",
+        description="Distributed consensus, caching topologies, message broker semantics, and database sharding.",
+        badge_icon="🏛️",
+        difficulty="Staff",
+        duration_minutes=15,
+        questions_count=5,
+        questions=[
+            QuizQuestion(
+                id=11,
+                question="In distributed systems, what is the primary benefit of Consistent Hashing over naive modulo hashing (hash(key) % N)?",
+                options=[
+                    "It converts all hashing operations to bitwise shifts for 10x faster execution.",
+                    "When adding or removing nodes, only K/N keys need to be remapped on average rather than almost all keys.",
+                    "It eliminates the need for network serialization.",
+                    "It guarantees strict serializability without locks."
+                ],
+                correct_option_index=1,
+                explanation="Consistent hashing maps both servers and keys to a logical ring. Adding or removing a server node only relocates keys between adjacent neighbors, avoiding catastrophic cluster-wide reshuffling."
+            ),
+            QuizQuestion(
+                id=12,
+                question="What is the difference between Write-Through and Write-Back (Write-Behind) cache policies?",
+                options=[
+                    "Write-Through writes synchronously to both cache and DB; Write-Back updates cache immediately and flushes to DB asynchronously.",
+                    "Write-Through requires Redis; Write-Back only works with Memcached.",
+                    "Write-Through drops stale data on reads; Write-Back invalidates on writes.",
+                    "Write-Through only supports relational SQL databases."
+                ],
+                correct_option_index=0,
+                explanation="Write-Through provides high consistency by persisting to DB before acknowledging. Write-Back provides higher write throughput and lower write latency at the risk of losing uncommitted data during power/node failure."
+            ),
+            QuizQuestion(
+                id=13,
+                question="Under the CAP theorem, how does a CP system typically behave during a network partition?",
+                options=[
+                    "It accepts all writes and compromises data consistency across split partitions.",
+                    "It returns errors or blocks writes rather than serving inconsistent or stale data.",
+                    "It automatically provisions a new cloud data center.",
+                    "It converts all transactions to eventual consistency immediately."
+                ],
+                correct_option_index=1,
+                explanation="A CP (Consistency + Partition Tolerance) system prioritizes strict consistency across partitions by refusing to process updates that cannot achieve quorum, rejecting or stalling requests rather than returning diverging state."
+            ),
+            QuizQuestion(
+                id=14,
+                question="What mechanism does an event-driven system rely upon to guarantee Idempotency on consumers?",
+                options=[
+                    "Running consumers on bare-metal hardware only.",
+                    "Unique transaction/idempotency keys checked against a deduplication store before applying mutations.",
+                    "Disabling consumer retries entirely.",
+                    "Restricting event payload size to under 1KB."
+                ],
+                correct_option_index=1,
+                explanation="At-least-once message brokers (like Kafka/RabbitMQ) can deliver duplicate messages during retries. Consumers store processed message IDs or idempotency tokens in a database/cache with atomic operations to prevent duplicate mutations."
+            ),
+            QuizQuestion(
+                id=15,
+                question="How does database Read Replicas replication lag affect users in read-after-write scenarios, and how is it mitigated?",
+                options=[
+                    "Replicas stop accepting read queries; mitigated by restarting the database instance.",
+                    "Users may read stale data right after writing; mitigated by routing immediate subsequent reads for that user to the Primary node.",
+                    "It causes deadlocks in primary tables; mitigated by switching to NoSQL.",
+                    "It causes corrupted write headers; mitigated by SSL handshakes."
+                ],
+                correct_option_index=1,
+                explanation="Asynchronous replication lag causes a read from a replica to miss writes committed milliseconds earlier on the primary. This is resolved by routing the user's reads to the primary for a few seconds (session consistency) or using version tokens."
+            )
+        ]
+    ),
+    TopicAssessment(
+        id="cloud-devops",
+        title="Cloud DevOps & Platform Reliability",
+        description="Kubernetes orchestration, container runtimes, GitOps pipelines, and zero-downtime deployments.",
+        badge_icon="☁️",
+        difficulty="Senior",
+        duration_minutes=15,
+        questions_count=5,
+        questions=[
+            QuizQuestion(
+                id=16,
+                question="In Kubernetes, what is the crucial operational difference between a Liveness Probe and a Readiness Probe?",
+                options=[
+                    "Liveness is written in YAML; Readiness must be written in Go.",
+                    "Liveness probe failure restarts the container; Readiness probe failure removes the Pod from Service endpoints so it stops receiving traffic.",
+                    "Liveness probe checks CPU utilization; Readiness probe checks memory allocation.",
+                    "Liveness probe runs once at startup; Readiness probe never runs at startup."
+                ],
+                correct_option_index=1,
+                explanation="Liveness probes detect deadlocks and restart stuck containers. Readiness probes determine when a pod is warm and healthy enough to accept ingress traffic without dropping user requests."
+            ),
+            QuizQuestion(
+                id=17,
+                question="What is the primary benefit of Canary Deployments over traditional Rolling Updates?",
+                options=[
+                    "Canary deployments do not require Docker containers.",
+                    "Canary deployments route a small fraction (e.g. 5%) of real production traffic to the new version to detect errors before full rollout.",
+                    "Canary deployments eliminate the need for reverse proxies.",
+                    "Canary deployments guarantee 100% test coverage."
+                ],
+                correct_option_index=1,
+                explanation="Canary rollouts expose a tiny slice of live user traffic to new code while monitoring telemetry (error rates, latency spikes). If an anomaly is observed, traffic is instantly rolled back before impacting the broader user base."
+            ),
+            QuizQuestion(
+                id=18,
+                question="Why is Terraform's state lock mechanism (e.g., using AWS DynamoDB with S3 backend) critical in team environments?",
+                options=[
+                    "It encrypts secret variables using AES-256.",
+                    "It prevents concurrent execution of Terraform operations that could corrupt the infrastructure state file.",
+                    "It enforces GitHub single sign-on authentication.",
+                    "It automatically compiles HCL code into AWS CloudFormation templates."
+                ],
+                correct_option_index=1,
+                explanation="State locking acquires a mutual exclusion lock before plan/apply steps, preventing two engineers or CI pipelines from modifying and corrupting the same infrastructure state simultaneously."
+            ),
+            QuizQuestion(
+                id=19,
+                question="In distributed telemetry and SRE, what does the Four Golden Signals framework comprise?",
+                options=[
+                    "Speed, Memory, Disk, Bandwidth",
+                    "Latency, Traffic, Errors, and Saturation",
+                    "Logs, Traces, Alerts, and Dashboards",
+                    "Build Time, Deploy Time, Test Coverage, and Code Churn"
+                ],
+                correct_option_index=1,
+                explanation="Google's SRE book defines the Four Golden Signals of service monitoring as: Latency (time to serve), Traffic (demand/RPS), Errors (rate of failed requests), and Saturation (how full service resources are)."
+            ),
+            QuizQuestion(
+                id=20,
+                question="What is the advantage of multi-stage Docker builds for production services?",
+                options=[
+                    "They allow running Windows containers inside Linux kernels.",
+                    "They separate build dependencies (compilers, SDKs) from the final minimal runtime image, reducing image size and attack surface.",
+                    "They enable container auto-scaling without an orchestrator.",
+                    "They bypass Docker daemon socket security restrictions."
+                ],
+                correct_option_index=1,
+                explanation="Multi-stage builds allow compiling code with full build chains in intermediate layers and copying only the compiled artifacts into a lightweight, stripped runtime image (like Alpine or Distroless), shrinking images from 1GB+ to under 50MB."
             )
         ]
     )

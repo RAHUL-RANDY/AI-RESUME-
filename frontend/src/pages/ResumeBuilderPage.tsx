@@ -20,6 +20,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { atsOptimizerService } from '../services/api';
+import { useResumeAnalysis } from '../hooks/useResumeAnalysis';
 import { BoostBulletVariations, AnalyzeATSResponse } from '../types';
 
 interface ExperienceItem {
@@ -181,25 +182,32 @@ const ROLE_PRESETS: RolePreset[] = [
 ];
 
 export const ResumeBuilderPage: React.FC = () => {
+  const { parsedResume, targetRole } = useResumeAnalysis();
+
   // State for resume fields
   const [template, setTemplate] = useState<'harvard' | 'modern'>('harvard');
   const [mobileTab, setMobileTab] = useState<'editor' | 'preview'>('editor');
   const [activePreset, setActivePreset] = useState<string>('fullstack');
 
-  // Contact Details
-  const [name, setName] = useState('Alex Rivera');
-  const [title, setTitle] = useState('Senior Full Stack Engineer');
-  const [email, setEmail] = useState('alex.rivera@example.com');
-  const [phone, setPhone] = useState('+1 (555) 382-9102');
-  const [location, setLocation] = useState('San Francisco, CA');
-  const [linkedin, setLinkedin] = useState('linkedin.com/in/alexrivera-tech');
-  const [github, setGithub] = useState('github.com/alexrivera-eng');
+  // Contact Details (Initialized with authentic candidate profile)
+  const [name, setName] = useState<string>(parsedResume?.name || 'Rahul R');
+  const [title, setTitle] = useState<string>(targetRole || parsedResume?.experience?.[0]?.role || 'Senior Full Stack Engineer');
+  const [email, setEmail] = useState<string>(parsedResume?.email || 'rahul.engineer@example.com');
+  const [phone, setPhone] = useState<string>(parsedResume?.phone || '+1 (555) 382-9102');
+  const [location, setLocation] = useState<string>(parsedResume?.location || 'San Francisco, CA');
+  const [linkedin, setLinkedin] = useState<string>(parsedResume?.linkedin || 'linkedin.com/in/rahul-engineer');
+  const [github, setGithub] = useState<string>(parsedResume?.github || 'github.com/RAHUL-RANDY');
   
   // Resume Body
-  const [summary, setSummary] = useState(
+  const [summary, setSummary] = useState<string>(
+    parsedResume?.summary ||
     'Performance-driven Senior Software Engineer with 5+ years of experience architecting distributed cloud systems and responsive web applications. Proven track record reducing API latency by 42% and driving 99.99% microservice uptime across high-throughput production workloads.'
   );
-  const [skills, setSkills] = useState('TypeScript, React 19, Python, FastAPI, Node.js, PostgreSQL, Redis, Docker, Kubernetes, AWS, GraphQL, CI/CD');
+  const [skills, setSkills] = useState<string>(
+    parsedResume?.technical_skills?.join(', ') ||
+    parsedResume?.skills?.join(', ') ||
+    'TypeScript, React 19, Python, FastAPI, Node.js, PostgreSQL, Redis, Docker, Kubernetes, AWS, CI/CD'
+  );
 
   const [experiences, setExperiences] = useState<ExperienceItem[]>([
     {
@@ -244,9 +252,63 @@ export const ResumeBuilderPage: React.FC = () => {
       id: 'e1',
       institution: 'University of California, Berkeley',
       degree: 'B.S. in Computer Science (Magna Cum Laude)',
-      duration: '2016 — 2020'
+      duration: '2018 — 2022'
     }
   ]);
+
+  // Sync with parsedResume when candidate uploads or switches resume
+  const syncWithUploadedResume = useCallback(() => {
+    if (!parsedResume) return;
+    if (parsedResume.name) setName(parsedResume.name);
+    if (parsedResume.email) setEmail(parsedResume.email);
+    if (parsedResume.phone) setPhone(parsedResume.phone);
+    if (parsedResume.location) setLocation(parsedResume.location);
+    if (parsedResume.linkedin) setLinkedin(parsedResume.linkedin);
+    if (parsedResume.github) setGithub(parsedResume.github);
+    if (targetRole) setTitle(targetRole);
+
+    const skillsList = parsedResume.technical_skills || parsedResume.skills;
+    if (skillsList && skillsList.length > 0) {
+      setSkills(skillsList.join(', '));
+    }
+    if (parsedResume.experience && parsedResume.experience.length > 0) {
+      const expItems: ExperienceItem[] = parsedResume.experience.map((e, idx) => ({
+        id: `exp-${idx + 1}`,
+        role: e.role,
+        company: e.company,
+        duration: e.duration || '2022 — Present',
+        location: parsedResume.location || 'San Francisco, CA',
+        bullets: e.highlights && e.highlights.length > 0 
+          ? e.highlights 
+          : [e.description || 'Architected distributed backend services with sub-25ms latency.']
+      }));
+      setExperiences(expItems);
+    }
+    if (parsedResume.projects && parsedResume.projects.length > 0) {
+      const projItems: ProjectItem[] = parsedResume.projects.map((p, idx) => ({
+        id: `proj-${idx + 1}`,
+        name: p.name,
+        tech: p.technologies && p.technologies.length > 0 ? p.technologies.join(', ') : 'Python, React, PostgreSQL',
+        bullets: [p.description]
+      }));
+      setProjects(projItems);
+    }
+    if (parsedResume.education && parsedResume.education.length > 0) {
+      const eduItems: EducationItem[] = parsedResume.education.map((ed, idx) => ({
+        id: `edu-${idx + 1}`,
+        institution: ed.institution,
+        degree: ed.degree,
+        duration: ed.graduation_year ? `Graduated ${ed.graduation_year}` : '2018 — 2022'
+      }));
+      setEducation(eduItems);
+    }
+  }, [parsedResume, targetRole]);
+
+  useEffect(() => {
+    if (parsedResume && parsedResume.name) {
+      syncWithUploadedResume();
+    }
+  }, [parsedResume, syncWithUploadedResume]);
 
   // ATS Optimization & Target Matching State
   const [jobDescription, setJobDescription] = useState<string>('');
@@ -580,6 +642,18 @@ ${education.map(e => `${e.institution} — ${e.degree} (${e.duration})`).join('\
             {copySuccess ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
             <span>{copySuccess ? 'Copied Text!' : 'Copy Plaintext'}</span>
           </button>
+
+          {/* Sync Uploaded Resume */}
+          {parsedResume && (
+            <button
+              onClick={() => syncWithUploadedResume()}
+              className="sv-btn-secondary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer border border-sky-500/30 text-sky-300 hover:bg-sky-500/10"
+              title="Populate builder with your analyzed resume data"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-sky-400" />
+              <span>Sync Uploaded Resume</span>
+            </button>
+          )}
 
           {/* Download / Print PDF */}
           <button

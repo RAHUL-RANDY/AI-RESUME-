@@ -34,7 +34,7 @@ export const SkillAssessmentsPage: React.FC = () => {
   const [result, setResult] = useState<AssessmentResultResponse | null>(null);
   const [copiedBadge, setCopiedBadge] = useState<boolean>(false);
 
-  const candidateName = parsedResume?.name || 'Alex Chen';
+  const candidateName = parsedResume?.name || 'Rahul R';
 
   const loadTopics = useCallback(async () => {
     try {
