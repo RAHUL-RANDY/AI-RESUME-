@@ -60,7 +60,16 @@ export const JobTrackerPage: React.FC = () => {
       if (resApps.ok && resStats.ok) {
         const appsData = await resApps.json();
         const statsData = await resStats.json();
-        setApplications(appsData);
+        const rawApps: JobApp[] = Array.isArray(appsData) ? appsData : [];
+        const seenAppIds = new Set<string>();
+        const uniqueApps: JobApp[] = [];
+        for (const a of rawApps) {
+          if (a && a.id && !seenAppIds.has(a.id)) {
+            seenAppIds.add(a.id);
+            uniqueApps.push(a);
+          }
+        }
+        setApplications(uniqueApps);
         setStats(statsData);
       }
     } catch (e) {

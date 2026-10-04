@@ -38,14 +38,26 @@ export const CoursesPage: React.FC = () => {
     setIsLoading(true);
     try {
       const res = await recommendationService.getAllCourses();
-      setCourses(res.recommended_courses || []);
-      setFreeCount(res.free_count || (res.recommended_courses || []).filter(c => c.is_free).length);
-      setPaidCount(res.paid_count || (res.recommended_courses || []).filter(c => !c.is_free).length);
+      const rawCourses = res.recommended_courses || [];
+      // Strictly deduplicate by course ID
+      const seenCourseIds = new Set<string>();
+      const uniqueCourses: CourseItem[] = [];
+      for (const c of rawCourses) {
+        if (c && c.id && !seenCourseIds.has(c.id)) {
+          seenCourseIds.add(c.id);
+          uniqueCourses.push(c);
+        }
+      }
+      setCourses(uniqueCourses);
+      setFreeCount(res.free_count || uniqueCourses.filter(c => c.is_free).length);
+      setPaidCount(res.paid_count || uniqueCourses.filter(c => !c.is_free).length);
       if (res.categories && res.categories.length > 0) {
-        setCategories(['All', ...res.categories]);
+        const cleanCats = Array.from(new Set(res.categories.filter(cat => cat && cat.trim() && cat !== 'All')));
+        setCategories(['All', ...cleanCats]);
       }
       if (res.roles && res.roles.length > 0) {
-        setRoles(['All Roles', ...res.roles]);
+        const cleanRoles = Array.from(new Set(res.roles.filter(r => r && r.trim() && r !== 'All Roles')));
+        setRoles(['All Roles', ...cleanRoles]);
       }
     } catch (err) {
       console.error('Failed to fetch courses:', err);

@@ -163,7 +163,16 @@ export const JobSearchPage: React.FC = () => {
 
   // Filtered and sorted listings
   const displayedJobs = useMemo(() => {
-    let list = [...jobs];
+    // Strictly deduplicate by unique job id
+    const seenIds = new Set<string>();
+    const uniqueJobs: JobListing[] = [];
+    for (const j of jobs) {
+      if (j && j.id && !seenIds.has(j.id)) {
+        seenIds.add(j.id);
+        uniqueJobs.push(j);
+      }
+    }
+    let list = uniqueJobs;
 
     // Filter by Company Tier
     if (selectedTier !== 'All') {
