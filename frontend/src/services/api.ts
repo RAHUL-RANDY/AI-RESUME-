@@ -86,7 +86,7 @@ export const resumeService = {
     if (targetRole) formData.append('target_role', targetRole);
 
     const res = await api.post('/resume/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Content-Type': undefined },
     });
     return res.data;
   },
@@ -224,7 +224,7 @@ export const recruiterService = {
     if (targetRole) formData.append('target_role', targetRole);
 
     const res = await api.post('/recruiter/bulk-upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Content-Type': undefined },
     });
     return res.data;
   },

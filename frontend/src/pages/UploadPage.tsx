@@ -188,8 +188,9 @@ export const UploadPage: React.FC = () => {
 
     } catch (err: any) {
       console.error('Analysis failed:', err);
-      // If backend is unreachable, 404, or network failure (e.g. Vercel deployment), activate client-side analysis
-      if (!err?.response || err?.response?.status === 404 || err?.code === 'ERR_NETWORK') {
+      // If backend is unreachable, proxy error (405), 404, or network failure (e.g. Vercel deployment), activate client-side analysis
+      const status = err?.response?.status;
+      if (!err?.response || status === 404 || status === 405 || status >= 500 || err?.code === 'ERR_NETWORK') {
         setStatusStep('Running intelligent client-side NLP evaluation fallback...');
         const candidateName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ") || "Candidate";
         const formattedName = candidateName.split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');

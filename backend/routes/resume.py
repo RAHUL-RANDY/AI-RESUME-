@@ -12,6 +12,7 @@ router = APIRouter(prefix="/api/resume", tags=["Resume Analysis"])
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 
 @router.post("/upload")
+@router.post("/upload/")
 async def upload_and_analyze_resume(
     file: UploadFile = File(...),
     job_description: Optional[str] = Form(None),
