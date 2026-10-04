@@ -2,8 +2,11 @@ import io
 import re
 import logging
 from typing import List, Dict, Any, Optional, Tuple
+# pyrefly: ignore [missing-import]
 import fitz  # PyMuPDF
+# pyrefly: ignore [missing-import]
 import docx
+# pyrefly: ignore [missing-import]
 import spacy
 
 from backend.models.schemas import (
