@@ -1,0 +1,17 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+backend/
+ai/
+datasets/
+models/
+docs/
+notebooks/
+tests/
+Dockerfile
+docker-compose.yml
+Procfile
+render.yaml
+*.log
