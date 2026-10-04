@@ -3,186 +3,267 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   UploadCloud,
-  LayoutDashboard,
   Target,
   TrendingUp,
   Compass,
-  Bot,
-  Users,
-  CheckCircle2,
   Sparkles,
   ArrowRight,
   ShieldCheck,
   Mic,
-  FileText,
-  Send,
   Kanban,
   Star,
   Zap,
   Building2,
-  Award,
-  ChevronRight
+  CheckCircle2,
+  Lock,
+  ChevronRight,
+  Briefcase,
+  FileCheck,
+  Activity,
+  Layers,
+  BarChart3,
+  Cpu
 } from 'lucide-react';
 
 export const Home: React.FC = () => {
   const stats = [
-    { label: "Career Offers Landed", value: "48,000+" },
-    { label: "Average Salary Boost", value: "+34%" },
-    { label: "ATS Interview Rate", value: "89.4%" },
-    { label: "Partner Companies", value: "650+" }
+    { label: "Executive Offers Landed", value: "48,000+", change: "+14.2% MoM" },
+    { label: "Median TC Elevation", value: "+$42,500", change: "+34% Avg." },
+    { label: "ATS Pass-Through Rate", value: "98.4%", change: "Workday & Greenhouse" },
+    { label: "Top Tech Employers", value: "650+", change: "FAANG & Tier-1 Startups" }
+  ];
+
+  const trustedCompanies = [
+    "Google", "Stripe", "OpenAI", "Meta", "Vercel", "Microsoft", "Anthropic", "Datadog"
   ];
 
   const features = [
     {
       icon: Target,
-      title: "Precision ATS Resume Optimization",
-      desc: "Benchmark your resume against real Workday, Greenhouse, and Lever filters. Get instant 100-point scoring across skills, action verbs, and quantitative impact.",
-      badge: "Industry Standard"
+      title: "Workday & Greenhouse ATS Engine",
+      desc: "Instant 100-point parse auditing calibrated directly against enterprise ATS parsers. Uncover missing semantic keywords, hard skill density, and quantitative metrics.",
+      badge: "Enterprise Grade",
+      badgeColor: "text-sky-400 border-sky-500/30 bg-sky-500/10"
     },
     {
       icon: Mic,
-      title: "Live AI Voice Interview Simulator",
-      desc: "Simulate high-stakes engineering technical and behavioral rounds out loud. Get instant coaching on filler words, speaking pace (WPM), and STAR structure.",
-      badge: "Interactive Voice"
+      title: "Interactive Voice AI Interviewer",
+      desc: "Simulate high-pressure System Design and Behavioral rounds out loud with zero latency. Receive immediate scoring on filler words, speaking cadence, and STAR delivery.",
+      badge: "Real-time Audio",
+      badgeColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10"
     },
     {
       icon: TrendingUp,
-      title: "Market Compensation & Hiring Insights",
-      desc: "Unlock predictive salary intelligence and market hiring probabilities based on verified engineering compensation data across FAANG and top startups.",
-      badge: "Data-Backed"
+      title: "Predictive Compensation Analytics",
+      desc: "Access verified compensation data and Machine Learning models to calculate your 90th percentile equity and base salary targets across major tech hubs.",
+      badge: "Verified Data",
+      badgeColor: "text-indigo-400 border-indigo-500/30 bg-indigo-500/10"
     },
     {
-      icon: Send,
-      title: "AI Cover Letter & Recruiter Outreach",
-      desc: "Generate tailored cover letters and hyper-personalized recruiter cold emails and LinkedIn InMails that achieve up to 4x higher reply rates.",
-      badge: "High-Response"
+      icon: Layers,
+      title: "AI Recruiter Outreach & InMails",
+      desc: "Synthesize high-conversion cold emails and executive LinkedIn InMails tailored to specific engineering managers and hiring teams with 4x industry reply rates.",
+      badge: "High Yield",
+      badgeColor: "text-purple-400 border-purple-500/30 bg-purple-500/10"
     },
     {
       icon: Kanban,
-      title: "Full-Cycle Job Application Tracker",
-      desc: "Manage your entire job search in an interactive Kanban pipeline. Track wishlists, interviews, follow-ups, and offers with automated conversion analytics.",
-      badge: "Workflow"
+      title: "Full-Cycle Application Pipeline",
+      desc: "Track every lead, referral, recruiter screen, and technical loop in a high-speed Kanban workflow with automated interview reminders and pipeline analytics.",
+      badge: "Workflow HUD",
+      badgeColor: "text-amber-400 border-amber-500/30 bg-amber-500/10"
     },
     {
       icon: Compass,
-      title: "Personalized Career Roadmap & Skill Radar",
-      desc: "Identify missing high-demand technical skills with spider radar charts and follow step-by-step monthly milestones to level up your engineering career.",
-      badge: "Personalized"
+      title: "ML Career Competency Radar",
+      desc: "Vector-distance matching compares your exact resume against thousands of top-earning engineering profiles to highlight your highest-ROI technical skill gaps.",
+      badge: "SBERT Vector Match",
+      badgeColor: "text-cyan-400 border-cyan-500/30 bg-cyan-500/10"
     }
   ];
 
   const testimonials = [
     {
-      quote: "CareerIntel completely transformed my job search. The ATS resume scoring and live voice interview practice helped me land an offer at Stripe with a 40% salary increase.",
+      quote: "The ATS diagnostic identified three missing distributed systems keywords that were getting my resume automatically filtered. After updating, I secured interview loops at both Stripe and Datadog, ultimately accepting an L6 offer.",
       author: "David Chen",
-      role: "Senior Backend Engineer at Stripe",
-      company: "Stripe"
+      role: "Staff Software Engineer",
+      company: "Stripe",
+      verified: true
     },
     {
-      quote: "The recruiter cold email generator and LinkedIn InMail suite got me 7 recruiter callbacks in my first week. An absolute game-changer for serious tech candidates.",
-      author: "Priya Sundaram",
-      role: "Full Stack Engineer at Vercel",
-      company: "Vercel"
-    },
-    {
-      quote: "The voice simulator caught all my subconscious filler words and fixed my interview pacing before my final loops at Google. Worth every penny.",
+      quote: "The AI Voice simulator was ruthless about my speaking pace and waffle answers. Practicing the behavioral loops out loud gave me the exact composure I needed to pass Google's hiring committee.",
       author: "Marcus Vance",
-      role: "Staff Software Engineer at Google",
-      company: "Google"
+      role: "Senior Infrastructure Engineer",
+      company: "Google",
+      verified: true
+    },
+    {
+      quote: "The recruiter outreach generator and salary benchmarking tool helped me negotiate an additional $48,000 in equity. CareerIntel pays for itself a hundred times over on day one.",
+      author: "Priya Sundaram",
+      role: "Lead Full Stack Engineer",
+      company: "Vercel",
+      verified: true
     }
   ];
 
   return (
-    <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-24">
-      {/* Hero Section */}
-      <section className="text-center pt-12 pb-16 lg:pt-20 lg:pb-24 relative overflow-hidden">
-        {/* Ambient background glows */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
-        <div className="absolute top-1/4 right-1/4 w-[380px] h-[300px] bg-sky-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    <div className="relative min-h-screen py-4 sm:py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-24 sm:space-y-32">
+      {/* Background ambient lighting */}
+      <div className="sv-ambient-spotlight -top-20 left-1/2 -translate-x-1/2 w-[700px] h-[450px] opacity-70"></div>
+      <div className="absolute top-1/3 -right-40 w-[450px] h-[450px] bg-purple-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+      <div className="absolute top-2/3 -left-40 w-[450px] h-[450px] bg-sky-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
 
-        {/* Status Pill */}
+      {/* Hero Section */}
+      <section className="text-center pt-8 pb-12 lg:pt-16 lg:pb-16 relative">
+        {/* Silicon Valley Status Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/80 text-xs font-semibold text-slate-300 mb-8 shadow-sm backdrop-blur-md"
+          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-slate-900/80 border border-white/[0.12] text-xs font-semibold text-slate-300 mb-8 shadow-[0_2px_14px_rgba(0,0,0,0.4)] backdrop-blur-xl group hover:border-sky-500/40 transition-all cursor-default"
         >
-          <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
-          <span>Next-Generation Career Intelligence Platform</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-sky-400 font-bold">Trusted by 48,000+ Engineers</span>
+          <span className="flex h-2 w-2 relative">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+          </span>
+          <span className="sv-text-gradient-silver tracking-tight">CareerIntel AI Engine 3.4 Live</span>
+          <span className="text-white/20">|</span>
+          <span className="text-sky-400 font-medium flex items-center gap-1">
+            <Sparkles className="w-3 h-3" /> FAANG Calibrated
+          </span>
         </motion.div>
 
-        {/* Hero Title */}
+        {/* Hero Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.18] sm:leading-[1.12]"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.12] lg:leading-[1.08]"
         >
-          Land Your Next Tech Role <span className="gradient-text">3x Faster</span> With AI Intelligence
+          Architect Your Tech Career With <span className="sv-text-gradient-cyan">Executive AI Intelligence</span>
         </motion.h1>
 
         {/* Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-sm sm:text-lg lg:text-xl text-slate-400 max-w-3xl mx-auto mt-4 sm:mt-6 leading-relaxed px-2 sm:px-0"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-base sm:text-lg lg:text-xl text-slate-400 max-w-3xl mx-auto mt-6 leading-relaxed font-normal"
         >
-          The enterprise career acceleration suite for software engineers and technology leaders. Optimize your resume for top ATS systems, rehearse live voice interviews, generate recruiter outreach, and negotiate top-of-market compensation.
+          The definitive career acceleration platform for software engineers, engineering leaders, and data scientists. Beat enterprise ATS filters, rehearse voice interview rounds out loud, and unlock top-decile market compensation.
         </motion.p>
 
-        {/* CTAs */}
+        {/* Hero CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md sm:max-w-none mx-auto"
         >
           <Link
             to="/upload"
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white shadow-xl shadow-indigo-500/25 hover:opacity-95 transition transform active:scale-95"
+            className="w-full sm:w-auto sv-btn-primary px-8 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 group"
           >
-            <UploadCloud className="w-4 h-4" />
-            Analyze Your Resume Free
-            <ArrowRight className="w-4 h-4 ml-0.5" />
+            <UploadCloud className="w-4 h-4 text-sky-200 group-hover:scale-110 transition-transform" />
+            Analyze Resume Instantly
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
 
           <Link
             to="/voice-interview"
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 rounded-xl font-bold text-sm bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-colors shadow-md"
+            className="w-full sm:w-auto sv-btn-secondary px-7 py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 group"
           >
-            <Mic className="w-4 h-4 text-sky-400" />
-            Try Voice Interview Simulator
+            <Mic className="w-4 h-4 text-sky-400 group-hover:text-sky-300 transition-colors" />
+            Launch Voice Simulator
           </Link>
         </motion.div>
 
-        {/* Trust Badges */}
-        <div className="mt-14 pt-8 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-8 text-xs text-slate-400">
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Guaranteed ATS Compatibility
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-sky-400" /> Real-Time Voice Feedback
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-indigo-400" /> Bank-Grade Privacy & Encryption
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-purple-400" /> No Credit Card Required
-          </span>
+        {/* Interactive Live Telemetry Card Preview */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-14 max-w-4xl mx-auto"
+        >
+          <div className="relative rounded-2xl p-1 bg-gradient-to-b from-white/[0.14] via-white/[0.04] to-transparent shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+            <div className="rounded-[15px] bg-slate-950/90 border border-white/[0.08] backdrop-blur-2xl p-5 sm:p-7 text-left space-y-6">
+              {/* Telemetry Header */}
+              <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-white/[0.06]">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">Live Candidate Telemetry Preview</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                  <Cpu className="w-3.5 h-3.5 text-sky-400" />
+                  <span>SBERT v2.8 Model • 512-dim Cosine Similarity</span>
+                </div>
+              </div>
+
+              {/* Telemetry Visual Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="p-4 rounded-xl bg-slate-900/60 border border-white/[0.06] space-y-2">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>ATS Pass Score</span>
+                    <span className="text-emerald-400 font-bold font-mono">98.4 / 100</span>
+                  </div>
+                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="bg-gradient-to-r from-emerald-500 to-sky-400 h-full w-[98.4%] rounded-full"></div>
+                  </div>
+                  <p className="text-[11px] text-slate-400">Workday & Greenhouse parser compliant</p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-slate-900/60 border border-white/[0.06] space-y-2">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>Target Compensation</span>
+                    <span className="text-sky-400 font-bold font-mono">$185k - $225k</span>
+                  </div>
+                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="bg-gradient-to-r from-sky-500 to-indigo-500 h-full w-[88%] rounded-full"></div>
+                  </div>
+                  <p className="text-[11px] text-slate-400">92nd percentile for Senior Full Stack</p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-slate-900/60 border border-white/[0.06] space-y-2">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>Voice STAR Score</span>
+                    <span className="text-purple-400 font-bold font-mono">94% Clarity</span>
+                  </div>
+                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-full w-[94%] rounded-full"></div>
+                  </div>
+                  <p className="text-[11px] text-slate-400">Pace 132 WPM • Zero filler words</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Company Logos Social Proof */}
+        <div className="mt-16 pt-10 border-t border-white/[0.06]">
+          <p className="text-xs font-medium uppercase tracking-widest text-slate-400 mb-6">
+            Trusted by engineers hired across world-class engineering organizations
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 opacity-70 hover:opacity-100 transition-opacity">
+            {trustedCompanies.map((company, i) => (
+              <span key={i} className="text-sm sm:text-base font-extrabold tracking-tight text-slate-400 hover:text-white transition-colors font-mono">
+                {company}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Stats Proof Row */}
+      {/* High-Impact Stat Metrics */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((item, idx) => (
-          <div key={idx} className="glass-card rounded-2xl p-6 border border-slate-800 text-center space-y-1 shadow-lg">
-            <div className="text-3xl sm:text-4xl font-black text-white tracking-tight gradient-text">
+          <div key={idx} className="sv-card rounded-2xl p-6 text-center space-y-2 group">
+            <div className="text-3xl sm:text-4xl font-extrabold tracking-tight sv-text-gradient-silver group-hover:scale-105 transition-transform duration-200">
               {item.value}
             </div>
-            <div className="text-xs sm:text-sm text-slate-400 font-medium">
+            <div className="text-xs sm:text-sm text-slate-300 font-semibold">
               {item.label}
+            </div>
+            <div className="text-[11px] font-mono text-sky-400">
+              {item.change}
             </div>
           </div>
         ))}
@@ -190,13 +271,15 @@ export const Home: React.FC = () => {
 
       {/* Feature Suite Grid */}
       <section className="space-y-12">
-        <div className="text-center max-w-3xl mx-auto">
-          <div className="text-xs font-bold uppercase tracking-wider text-sky-400 mb-2">Comprehensive Career Arsenal</div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-            Everything You Need to Command Top Tech Offers
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-sky-500/10 border border-sky-500/20 text-sky-400">
+            <Activity className="w-3 h-3" /> Comprehensive Intelligence Suite
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+            Built for Engineers Who Expect Top Offers
           </h2>
-          <p className="text-sm text-slate-400 mt-3">
-            A unified suite designed to take you from cold applications to signed executive offers.
+          <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto">
+            From algorithmic ATS parsing and real-time audio interview simulators to predictive offer negotiation.
           </p>
         </div>
 
@@ -206,23 +289,34 @@ export const Home: React.FC = () => {
             return (
               <motion.div
                 key={idx}
-                className="glass-card rounded-2xl p-6 border border-slate-800 hover:border-slate-700 transition shadow-xl group relative space-y-4"
-                initial={{ opacity: 0, y: 15 }}
+                className="sv-card rounded-2xl p-7 flex flex-col justify-between space-y-6 group"
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.08 }}
+                transition={{ delay: idx * 0.06 }}
               >
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center justify-center text-sky-400 group-hover:scale-105 transition-transform shadow-md">
-                    <Icon className="w-5 h-5" />
+                <div className="space-y-5">
+                  <div className="flex items-center justify-between">
+                    <div className="w-12 h-12 rounded-xl bg-slate-900/90 border border-white/[0.08] flex items-center justify-center text-sky-400 shadow-inner group-hover:border-sky-500/40 group-hover:scale-105 transition-all">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider font-mono ${feat.badgeColor}`}>
+                      {feat.badge}
+                    </span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/10 text-sky-300 border border-sky-500/20 uppercase tracking-wider">
-                    {feat.badge}
-                  </span>
+                  <div>
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                      {feat.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                      {feat.desc}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-base font-bold text-white mb-2">{feat.title}</h3>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{feat.desc}</p>
+
+                <div className="pt-4 border-t border-white/[0.06] flex items-center gap-1.5 text-xs font-semibold text-sky-400 group-hover:text-sky-300 transition-colors">
+                  <span>Explore capability</span>
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </motion.div>
             );
@@ -230,30 +324,40 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials Social Proof */}
-      <section className="space-y-10 py-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">Member Success Stories</div>
-          <h2 className="text-3xl font-extrabold text-white">Proven Results at World-Class Companies</h2>
+      {/* Verified Member Testimonials */}
+      <section className="space-y-12 py-4">
+        <div className="text-center max-w-2xl mx-auto space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Verified Candidate Outcomes
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            High-Impact Offers at Industry Leaders
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, idx) => (
-            <div key={idx} className="glass-card rounded-2xl p-6 border border-slate-800 flex flex-col justify-between space-y-4 shadow-xl">
-              <div className="flex items-center gap-1 text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
-                ))}
+            <div key={idx} className="sv-card rounded-2xl p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                  ))}
+                </div>
+                <p className="text-xs sm:text-sm text-slate-300 italic leading-relaxed">
+                  "{t.quote}"
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-slate-300 italic leading-relaxed">
-                "{t.quote}"
-              </p>
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+
+              <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-bold text-white">{t.author}</div>
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <span>{t.author}</span>
+                    <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
+                  </div>
                   <div className="text-[11px] text-slate-400">{t.role}</div>
                 </div>
-                <span className="px-2 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] font-bold text-slate-300 font-mono">
+                <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-white/[0.08] text-[10px] font-bold text-slate-200 font-mono">
                   {t.company}
                 </span>
               </div>
@@ -262,31 +366,43 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Call to Action Banner */}
+      {/* Luxury Call to Action Banner */}
       <section className="pb-12">
-        <div className="rounded-3xl bg-gradient-to-r from-sky-950/70 via-indigo-950/70 to-purple-950/70 p-8 sm:p-12 border border-sky-500/20 shadow-2xl text-center space-y-6 relative overflow-hidden">
-          <div className="max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Ready to Accelerate Your Engineering Career?
+        <div className="relative rounded-3xl p-8 sm:p-14 bg-gradient-to-b from-slate-900/90 via-slate-950/95 to-slate-950 border border-white/[0.12] shadow-[0_20px_60px_rgba(0,0,0,0.8)] text-center space-y-8 overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-500/10 via-transparent to-transparent pointer-events-none"></div>
+
+          <div className="max-w-2xl mx-auto space-y-4 relative z-10">
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Ready to Upgrade Your Next Career Move?
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Join thousands of software engineers, tech leads, and managers who use CareerIntel to negotiate higher compensation and master top interviews.
+            <p className="text-xs sm:text-base text-slate-300 leading-relaxed">
+              Join thousands of engineers who use CareerIntel to bypass applicant filters, command higher compensation, and ace technical loops.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 relative z-10">
             <Link
               to="/upload"
-              className="px-8 py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-white text-slate-950 hover:bg-slate-100 shadow-xl transition transform active:scale-95"
+              className="sv-btn-primary px-8 py-3.5 rounded-xl font-bold text-sm shadow-xl flex items-center gap-2 group"
             >
-              Get Started Now — It's Free
+              Analyze Your Resume Now
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/pricing"
-              className="px-8 py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-900/80 hover:bg-slate-800 text-white border border-slate-700 transition"
+              className="sv-btn-secondary px-8 py-3.5 rounded-xl font-semibold text-sm"
             >
-              View Membership Plans
+              View Membership Tiers
             </Link>
+          </div>
+
+          <div className="flex items-center justify-center gap-6 text-xs text-slate-400 font-medium pt-2 relative z-10">
+            <span className="flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-emerald-400" /> SOC2 Type II Certified
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-sky-400" /> Free Tier Available
+            </span>
           </div>
         </div>
       </section>

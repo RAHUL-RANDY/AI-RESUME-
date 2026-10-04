@@ -110,23 +110,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-800/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 w-full bg-slate-950/80 backdrop-blur-2xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-500 p-0.5 shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-slate-950 rounded-[7px] flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-sky-400" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 rounded-xl blur-[6px] opacity-70 group-hover:opacity-100 transition duration-300"></div>
+              <div className="relative w-9 h-9 rounded-xl bg-slate-950 border border-white/20 flex items-center justify-center shadow-inner">
+                <Sparkles className="w-4 h-4 text-sky-400 group-hover:rotate-12 transition-transform duration-300" />
               </div>
             </div>
             <div>
-              <span className="font-bold text-base tracking-tight gradient-text">CareerIntel</span>
-              <span className="text-[10px] text-slate-400 block tracking-widest uppercase font-semibold">AI Intelligence</span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-extrabold text-base tracking-tight text-white group-hover:text-sky-300 transition-colors">CareerIntel</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-sky-500/10 border border-sky-500/30 text-sky-400">AI</span>
+              </div>
+              <span className="text-[10px] text-slate-400 block tracking-widest uppercase font-medium">Intelligence Suite</span>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-white/[0.06] backdrop-blur-md">
             {navLinks.map((link) => {
               const Icon = link.icon;
               const isActive = location.pathname === link.to;
@@ -134,13 +138,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
                     isActive
-                      ? 'bg-slate-800 text-sky-400 border border-slate-700 shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                      ? 'bg-slate-800/90 text-white border border-white/[0.12] shadow-sm shadow-black/40'
+                      : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/40'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-sky-400' : 'text-slate-400'}`} />
                   {link.label}
                 </Link>
               );

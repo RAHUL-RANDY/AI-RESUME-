@@ -528,34 +528,34 @@ ${education.map(e => `${e.institution} — ${e.degree} (${e.duration})`).join('\
 
       {/* Floating Notification Toast */}
       {boostToast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl bg-slate-900/95 border border-emerald-500/50 shadow-2xl shadow-emerald-500/20 text-white text-xs font-semibold backdrop-blur-md animate-bounce">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl bg-slate-950/95 border border-emerald-500/40 shadow-[0_10px_35px_rgba(16,185,129,0.3)] text-white text-xs font-semibold backdrop-blur-xl animate-bounce">
           <Zap className="w-4 h-4 text-emerald-400 fill-emerald-400" />
           <span>{boostToast}</span>
         </div>
       )}
 
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-800">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/[0.08]">
+        <div className="space-y-2">
+          <div className="sv-badge text-emerald-400 border-emerald-500/30">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>ATS 2026 Guaranteed Compliant Engine</span>
+            <span>ATS 2026 Guaranteed Compliant Architecture</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-            1-Click ATS <span className="gradient-text">Resume Creator & Score Booster</span>
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+            1-Click ATS <span className="sv-text-gradient-cyan">Resume Architect & Score Booster</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Build recruiter-approved Harvard CS & Modern Tech resumes with instant AI score boosting to 98%+ for Workday, Greenhouse & Lever.
+          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl font-normal">
+            Generate recruiter-approved Harvard CS & Silicon Valley resumes with real-time AI score boosting to 98%+ for Workday, Greenhouse & Lever.
           </p>
         </div>
 
         {/* Action Controls */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Template Format Toggle */}
-          <div className="bg-slate-900 border border-slate-800 p-1 rounded-xl flex items-center gap-1 text-xs">
+          <div className="bg-slate-950/80 border border-white/[0.1] p-1 rounded-xl flex items-center gap-1 text-xs backdrop-blur-md">
             <button
               onClick={() => setTemplate('harvard')}
-              className={`px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg font-bold transition cursor-pointer ${
                 template === 'harvard' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -563,7 +563,7 @@ ${education.map(e => `${e.institution} — ${e.degree} (${e.duration})`).join('\
             </button>
             <button
               onClick={() => setTemplate('modern')}
-              className={`px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg font-bold transition cursor-pointer ${
                 template === 'modern' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -574,42 +574,42 @@ ${education.map(e => `${e.institution} — ${e.degree} (${e.duration})`).join('\
           {/* Copy Plain Text for ATS Web Forms */}
           <button
             onClick={handleCopyPlainText}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-xs transition cursor-pointer"
+            className="sv-btn-secondary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer"
             title="Copy plain formatted text to paste into Taleo/Workday text boxes"
           >
             {copySuccess ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
-            <span>{copySuccess ? 'Copied Text!' : 'Copy Text'}</span>
+            <span>{copySuccess ? 'Copied Text!' : 'Copy Plaintext'}</span>
           </button>
 
           {/* Download / Print PDF */}
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 transition cursor-pointer"
+            className="sv-btn-primary inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold shadow-lg cursor-pointer"
           >
             <Printer className="w-3.5 h-3.5" />
-            <span>Download / Print PDF</span>
+            <span>Download PDF</span>
           </button>
         </div>
       </div>
 
       {/* Career Track Role Presets */}
-      <div className="mb-6 bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4">
+      <div className="mb-8 sv-card rounded-2xl p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
             <Briefcase className="w-4 h-4 text-sky-400" />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Quick-Load Career Track Templates</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-200 font-mono">Quick-Load Career Specialization Templates</span>
           </div>
           <span className="text-[11px] text-slate-400">1-click to auto-populate high-scoring industry bullets & skills</span>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2.5">
           {ROLE_PRESETS.map((p) => (
             <button
               key={p.id}
               onClick={() => handleLoadPreset(p.id)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
                 activePreset === p.id
-                  ? 'bg-sky-500/20 border border-sky-500 text-sky-300 shadow-sm'
-                  : 'bg-slate-950/70 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  ? 'bg-sky-500/20 border border-sky-400/80 text-sky-200 shadow-md shadow-sky-500/10'
+                  : 'bg-slate-950/80 border border-white/[0.08] text-slate-400 hover:text-slate-200 hover:border-white/[0.18]'
               }`}
             >
               <span>{p.icon}</span>
