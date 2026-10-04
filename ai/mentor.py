@@ -86,9 +86,9 @@ Capabilities & Scope:
         except Exception as e:
             logger.warning(f"Anthropic API call failed: {e}. Falling back to context engine.")
 
-    # 2. Try OpenAI (GPT-4o-mini) with hot-reload key detection
-    from backend.services.openai_service import generate_chat_response, get_openai_key
-    if get_openai_key():
+    # 2. Try LLM (OpenAI / Gemini) with hot-reload key detection
+    from backend.services.openai_service import generate_chat_response, get_openai_key, get_gemini_key
+    if get_openai_key() or get_gemini_key():
         try:
             chat_history = [{"role": m.role, "content": m.content} for m in messages if m.role in ["user", "assistant"]]
             reply_text = await generate_chat_response(
