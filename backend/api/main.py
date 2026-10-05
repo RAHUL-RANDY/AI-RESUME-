@@ -52,12 +52,19 @@ app = FastAPI(
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # CORS configuration
-cors_env = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173")
-origins = [origin.strip() for origin in cors_env.split(",") if origin.strip()]
+default_origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "https://ai-resume-gn6v.vercel.app",
+]
+cors_env = os.getenv("CORS_ORIGINS", "")
+origins = [origin.strip() for origin in cors_env.split(",") if origin.strip()] if cors_env else default_origins
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins else ["*"],
+    allow_origins=origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
