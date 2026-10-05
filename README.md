@@ -190,3 +190,48 @@ All 19 test suites run and pass with 100% success rate.
 | **Explainability** | SHAP TreeExplainer | Local additive feature attributions for every inference | Verified & Active |
 
 See `docs/dataset_sources.md` for full dataset provenance and reproducibility instructions.
+
+---
+
+## 🚢 Production Deployment Guide
+
+The platform is 100% production-ready with pre-configured templates for cloud and container deployments:
+
+### Option 1: Render (Recommended Blueprint)
+Both the backend service and frontend static site are defined in [`render.yaml`](./render.yaml).
+
+1. Push your repository to GitHub or GitLab.
+2. In the [Render Dashboard](https://dashboard.render.com), click **New +** > **Blueprint**.
+3. Select this repository. Render automatically reads `render.yaml` and spins up:
+   - **`ai-career-backend`** (Python Web Service running Uvicorn).
+   - **`ai-career-frontend`** (Static Site with SPA rewrite rules).
+4. Add your database credentials in the Render Dashboard (under Environment Variables):
+   - `SUPABASE_URL` and `SUPABASE_KEY` (or `MONGO_URI`)
+   - `JWT_SECRET`
+   - `CORS_ORIGINS` (set to your frontend Render URL)
+
+### Option 2: Vercel (Frontend) + Render / Railway (Backend)
+- **Frontend on Vercel**:
+  1. Import the repository in [Vercel](https://vercel.com).
+  2. The pre-configured [`vercel.json`](./vercel.json) handles building `frontend/` and SPA rewrites.
+  3. Add environment variable in Vercel:
+     `VITE_API_BASE_URL=https://your-backend-service.onrender.com/api`
+- **Backend on Railway / Render / Fly.io**:
+  - The [`Procfile`](./Procfile) automatically starts:
+    `uvicorn backend.api.main:app --host 0.0.0.0 --port ${PORT:-8000}`
+  - Add your database & JWT environment variables.
+
+### Option 3: Docker & Docker Compose (Self-Hosted / VPS)
+Deploy the full stack (MongoDB + FastAPI + Frontend Nginx reverse proxy) in a single command:
+
+```bash
+# 1. Provide your environment keys in .env
+cp .env.example .env
+
+# 2. Build and launch all containers
+docker compose up --build -d
+```
+- Frontend will be accessible at: `http://localhost:5173` (or port 80).
+- Backend API will be accessible at: `http://localhost:8000`.
+- MongoDB database is mounted on persistent volume `mongo_data`.
+
